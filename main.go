@@ -355,6 +355,7 @@ func scanSitemap(ctx context.Context) []SitemapData {
 func getDefaultTemplates() *template.Template {
 	funcMap := template.FuncMap {
 		"safehtml": func(text string) template.HTML { return template.HTML(text) },
+		"safeurl": func(text string) template.URL { return template.URL(text) },
 		"add": func(a, b int) int { return a + b },
 		"sub": func(a, b int) int { return a - b },
 		"mul": func(a, b int) int { return a * b },
