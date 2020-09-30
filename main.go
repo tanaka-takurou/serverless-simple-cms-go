@@ -52,7 +52,6 @@ type ContentData struct {
 	ItemList           []ItemData       `json:"itemList"`
 	CategoryNameList   []string         `json:"categoryNameList"`
 	CategoryItemMap    map[string][]int `json:"categoryItemMap"`
-	SitemapDataList    []SitemapData    `json:"sitemap"`
 }
 
 type ConstData struct {
@@ -333,7 +332,6 @@ func scanContentData(ctx context.Context) ContentData {
 		ItemList: itemDataList,
 		CategoryNameList: categoryNameList,
 		CategoryItemMap: map[string][]int{},
-		SitemapDataList: []SitemapData{},
 	}
 }
 
@@ -355,6 +353,7 @@ func scanSitemap(ctx context.Context) []SitemapData {
 func getDefaultTemplates() *template.Template {
 	funcMap := template.FuncMap {
 		"safehtml": func(text string) template.HTML { return template.HTML(text) },
+		"safeurl": func(text string) template.URL { return template.URL(text) },
 		"add": func(a, b int) int { return a + b },
 		"sub": func(a, b int) int { return a - b },
 		"mul": func(a, b int) int { return a * b },

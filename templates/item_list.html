@@ -3,7 +3,7 @@
     <div class="ui container vmargin">
       <div class="ui relaxed divided items">
         <div class="item">
-          <div class="ui small image"><img src="{{ .Image }}"></div>
+          <div class="ui small image"><img src="{{ .Image | safeurl }}"></div>
           <div class="content">
             <a class="header">{{ .Title }}</a>
             <div class="meta">
