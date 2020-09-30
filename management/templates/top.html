@@ -1,0 +1,56 @@
+{{define "contenttag"}}
+  <div>
+    <div>
+      <h2 class="ui center aligned header">Serverless Simple CMS</h2>
+      <div class="ui text container">
+        <p class="top_description">Welcome. If you just created it, check the settings page. Then check the product page.</p>
+        <a class="ui large button" href="{{ .ProductUrl }}" target="_blank">Check Product Page</a>
+      </div>
+      <div class="vspace"></div>
+      <div class="stackable very relaxed ui container">
+        <div class="ui two column grid">
+          <div class="column">
+            <a href="./add">
+              <div class="ui segment">
+                <i class="file alternate outline icon"></i>
+                <span class="text">Add Item</span>
+              </div>
+            </a>
+          </div>
+          <div class="column">
+            <a href="./fix">
+              <div class="ui segment">
+                <i class="file alternate outline icon"></i>
+                <span class="text">Fix Item</span>
+              </div>
+            </a>
+          </div>
+          <div class="column">
+            <a href="./js">
+              <div class="ui segment">
+                <i class="file outline icon"></i>
+                <span class="text">Fix JS</span>
+              </div>
+            </a>
+          </div>
+          <div class="column">
+            <a href="./css">
+              <div class="ui segment">
+                <i class="file outline icon"></i>
+                <span class="text">Fix CSS</span>
+              </div>
+            </a>
+          </div>
+          <div class="column">
+            <a href="./setting">
+              <div class="ui segment">
+                <i class="cog icon"></i>
+                <span class="text">Setting</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{{end}}

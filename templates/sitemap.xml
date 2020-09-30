@@ -1,0 +1,11 @@
+{{define "base"}}{{$url := .URL }}{{ .SitemapHeadTag|safehtml }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{{ range .SitemapList }}
+   <url>
+      <loc>{{ $url }}{{.Loc}}</loc>
+      <lastmod>{{.Lastmod}}</lastmod>
+      <changefreq>{{.Changefreq}}</changefreq>
+      <priority>{{.Priority}}</priority>
+   </url>
+{{end}}
+</urlset>{{end}}

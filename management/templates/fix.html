@@ -1,0 +1,100 @@
+{{define "contenttag"}}
+  <div class="ui container">
+    <div id="warning" class="ui hidden warning message"></div>
+    <h2 class="ui center aligned header">Fix Item</h2>
+    <div class="ui segment">
+      <div class="field">
+        <label>Item</label>
+        <div class="ui input">
+          <select id="selectItem" class="ui fluid dropdown" name="content" onchange="SelectContent();">
+            <option value="0">Select</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <form id="formContent" class="ui form">
+      <div class="field">
+        <label>Title</label>
+        <div class="ui input">
+          <input type="text" name="title">
+        </div>
+      </div>
+      <p>&nbsp;</p>
+      <div class="field">
+        <label>Description</label>
+        <div class="ui input">
+          <input type="text" name="description">
+        </div>
+      </div>
+      <p>&nbsp;</p>
+      <div class="field">
+        <label>Image</label>
+        <div id="image_input_container" class="ui input">
+          <input id="img_url" type="text" name="image">
+          <div id="img_btn" class="ui green button" onclick="OpenModal();">
+            <i class="large file image middle aligned icon button"></i>
+          </div>
+        </div>
+      </div>
+      <p>&nbsp;</p>
+      <div>
+        <div class="field">
+          <label>Category</label>
+          <div class="ui input">
+            <input type="text" name="category1" autocomplete="on" list="category">
+          </div>
+        </div>
+        <div id="category2" class="field">
+          <label>Category2</label>
+          <div class="ui input">
+            <input type="text" name="category2" autocomplete="on" list="category">
+          </div>
+        </div>
+        <div id="category3" class="field">
+          <label>Category3</label>
+          <div class="ui input">
+            <input type="text" name="category3" autocomplete="on" list="category">
+          </div>
+        </div>
+        <datalist id="category">
+        </datalist>
+      </div>
+      <input type="hidden" name="id">
+      <button class="ui teal button" type="submit">
+        Update
+      </button>
+    </form>
+  </div>
+  <div class="ui dimmer modals page transition hidden">
+    <div class="ui large modal transition hidden">
+      <form class="ui large modal" method="POST" style="left: auto !important;">
+        <div class="header">
+          New Image
+        </div>
+        <div class="content">
+          <div class="ui form">
+            <div class="field">
+              <img id="preview" src>
+            </div>
+            <div class="field">
+              <label>Image File</label>
+              <div class="ui input">
+                <input id="image" type="file" name="image" accept="image/*" onchange="ChangeImage();">
+              </div>
+            </div>
+          </div>
+        </div>
+        <input type="hidden" name="action" value="createimg">
+        <div class="actions">
+          <div class="ui button" onclick="CloseModal();">Cancel</div>
+          <div class="ui green button" onclick="UploadImage(this);">Submit</div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script type="text/javascript">
+  $(document).ready(function() {
+    GetItemCategoryList();
+  });
+  </script>
+{{end}}

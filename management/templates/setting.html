@@ -1,0 +1,67 @@
+{{define "contenttag"}}
+  <div>
+    <div>
+      <div id="info" class="ui hidden info message">
+        <i class="close icon"></i>
+        <div class="header">Completed successfully</div>
+      </div>
+      <div id="warning" class="ui hidden warning message"></div>
+      <h2 class="ui center aligned header">Setting</h2>
+      <div class="vspace"></div>
+      <form class="ui form">
+        <div class="field">
+          <label>Site Title</label>
+          <div class="ui input">
+            <input id="sitetitle" type="text" name="title">
+          </div>
+        </div>
+        <p>&nbsp;</p>
+        <div class="field">
+          <label>Head Image</label>
+          <div id="image_input_container" class="ui input">
+            <input id="headimage" type="text" name="image">
+            <div id="img_btn" class="ui green button" onclick="OpenModal();">
+              <i class="large file image middle aligned icon button"></i>
+            </div>
+          </div>
+        </div>
+        <div id="set_const" class="ui teal submit button" onclick="SetConst();">OK</div>
+      </form>
+      <div class="ui divider"></div>
+      <h3 class="ui center aligned header">Set Sample Data</h3>
+      <form class="ui form">
+        <div class="field">
+          <label>Add 10 sample items.</label>
+        </div>
+        <div id="set_sample" class="ui teal submit button" onclick="SetSample();">Set</div>
+      </form>
+    </div>
+    <div class="ui dimmer modals page transition hidden">
+      <div class="ui large modal transition hidden">
+        <form class="ui large modal" method="POST" style="left: auto !important;">
+          <div class="header">
+            New Image
+          </div>
+          <div class="content">
+            <div class="ui form">
+              <div class="field">
+                <img id="preview" src>
+              </div>
+              <div class="field">
+                <label>Image File</label>
+                <div class="ui input">
+                  <input id="image" type="file" name="image" accept="image/*" onchange="ChangeImage();">
+                </div>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" name="action" value="createimg">
+          <div class="actions">
+            <div class="ui button" onclick="CloseModal();">Cancel</div>
+            <div class="ui green button" onclick="UploadImage(this);">Submit</div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{{end}}

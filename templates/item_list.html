@@ -1,0 +1,20 @@
+{{define "content"}}
+{{ range .Content.ItemList }}
+    <div class="ui container vmargin">
+      <div class="ui relaxed divided items">
+        <div class="item">
+          <div class="ui small image"><img src="{{ .Image }}"></div>
+          <div class="content">
+            <a class="header">{{ .Title }}</a>
+            <div class="meta">
+            {{ range .CategoryIds }}
+              {{ . }}
+            {{end}}
+            </div>
+            <div class="description">{{ .Description }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+{{end}}
+{{end}}

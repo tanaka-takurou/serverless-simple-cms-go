@@ -1,0 +1,245 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless CMS
+Parameters:
+  ApplicationName:
+    Type: String
+    Default: ServerlessCMS
+  ManagementPageApiStageName:
+    Type: String
+    Default: ProdStage
+Resources:
+  FrontPageApi:
+    Type: AWS::Serverless::HttpApi
+  ImgBucket:
+    Type: AWS::S3::Bucket
+  ItemTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: item_type
+        AttributeType: N
+      - AttributeName: id
+        AttributeType: N
+      KeySchema:
+      - AttributeName: item_type
+        KeyType: HASH
+      - AttributeName: id
+        KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 3
+        WriteCapacityUnits: 3
+      SSESpecification:
+        SSEEnabled: false
+  FrontPageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://sam-proto-bucket-2020/acf58f0020d538893b5daa063b7e3f18
+      Handler: main
+      MemorySize: 256
+      Runtime: go1.x
+      Description: CMS Front Function
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: ItemTable
+      - S3CrudPolicy:
+          BucketName:
+            Ref: ImgBucket
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: ItemTable
+          BUCKET_NAME:
+            Ref: ImgBucket
+          REGION:
+            Ref: AWS::Region
+      Events:
+        FrontPageApi:
+          Type: HttpApi
+          Properties:
+            Path: /
+            Method: get
+            ApiId:
+              Ref: FrontPageApi
+        FrontProxyApi:
+          Type: HttpApi
+          Properties:
+            Path: /{proxy+}
+            Method: get
+            ApiId:
+              Ref: FrontPageApi
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: false
+        UnusedAccountValidityDays: 7
+      AutoVerifiedAttributes:
+      - email
+      MfaConfiguration: 'OFF'
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+          RequireUppercase: true
+  UserPoolAppClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: mobile_app
+      ExplicitAuthFlows:
+      - USER_PASSWORD_AUTH
+      GenerateSecret: false
+      UserPoolId:
+        Ref: UserPool
+  ManagementPageApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      EndpointConfiguration: REGIONAL
+      StageName:
+        Ref: ManagementPageApiStageName
+  ManagementPageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://sam-proto-bucket-2020/58737c39dfd7390cad38cb5f42724cb8
+      Handler: main
+      MemorySize: 256
+      Runtime: go1.x
+      Description: CMS Management Front Function
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: ItemTable
+      Environment:
+        Variables:
+          ITEM_TABLE_NAME:
+            Ref: ItemTable
+          BUCKET_NAME:
+            Ref: ImgBucket
+          REGION:
+            Ref: AWS::Region
+          API_PATH:
+            Fn::Join:
+            - ''
+            - - /
+              - Ref: ManagementPageApiStageName
+              - /api
+          FRONT_URL:
+            Fn::Join:
+            - ''
+            - - https://
+              - Ref: FrontPageApi
+              - .execute-api.
+              - Ref: AWS::Region
+              - .amazonaws.com/
+      Events:
+        FrontPageApi:
+          Type: Api
+          Properties:
+            Path: /
+            Method: get
+            RestApiId:
+              Ref: ManagementPageApi
+        FrontProxyApi:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: get
+            RestApiId:
+              Ref: ManagementPageApi
+  ManagementMainFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://sam-proto-bucket-2020/34a92cee1f3b172f610e8930de0cd757
+      Handler: main
+      MemorySize: 256
+      Runtime: go1.x
+      Description: CMS Management API Function
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: ItemTable
+      - S3CrudPolicy:
+          BucketName:
+            Ref: ImgBucket
+      - Statement:
+        - Sid: UserPoolControlPolicy
+          Effect: Allow
+          Action:
+          - cognito-idp:InitiateAuth
+          - cognito-idp:GetUser
+          - cognito-idp:ChangePassword
+          - cognito-idp:GlobalSignOut
+          - cognito-idp:SignUp
+          - cognito-idp:ConfirmSignUp
+          Resource:
+            Fn::Sub:
+            - arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPoolId}
+            - UserPoolId:
+                Ref: UserPool
+      Environment:
+        Variables:
+          ITEM_TABLE_NAME:
+            Ref: ItemTable
+          BUCKET_NAME:
+            Ref: ImgBucket
+          REGION:
+            Ref: AWS::Region
+          CLIENT_ID:
+            Ref: UserPoolAppClient
+          FRONT_FUNCTION:
+            Ref: FrontPageFunction
+          SIGNUP_FLAG: '0'
+      Events:
+        FrontPageApi:
+          Type: Api
+          Properties:
+            Path: /api
+            Method: post
+            RestApiId:
+              Ref: ManagementPageApi
+Outputs:
+  FrontURI:
+    Description: Front Page URI
+    Value:
+      Fn::Join:
+      - ''
+      - - https://
+        - Ref: FrontPageApi
+        - .execute-api.
+        - Ref: AWS::Region
+        - .amazonaws.com/
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-Front
+  ManagementURI:
+    Description: Management Page URI
+    Value:
+      Fn::Join:
+      - ''
+      - - https://
+        - Ref: ManagementPageApi
+        - .execute-api.
+        - Ref: AWS::Region
+        - .amazonaws.com/
+        - Ref: ManagementPageApiStageName
+        - /
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-Management
+  BucketName:
+    Description: Image Bucket Name
+    Value:
+      Ref: ImgBucket
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-Bucket
+  TableName:
+    Description: Item Table Name
+    Value:
+      Ref: ItemTable
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-Table

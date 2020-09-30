@@ -1,0 +1,1151 @@
+{{define "main.css"}}<style type="text/css">
+html {
+  scroll-behavior: smooth;
+}
+#menu_icon {
+  color: #AAA !important;
+}
+#menu_button {
+  color: #AAA !important;
+}
+.index .pusher > .page {
+  background-color: #FFFFFF;
+}
+@media only screen and (max-width: 992px) {
+  html {
+    overflow-x: visible;
+    -webkit-overflow-scrolling: auto;
+  }
+}
+.index > .pusher {
+  display: block;
+  min-height: 0px;
+  flex-direction: initial;
+}
+.index > .pusher > .full.height {
+  display: block;
+  flex: none !important;
+}
+.index .masthead.segment.zoomed h1 {
+  text-shadow: 0px 0px 4px rgba(0, 0, 0, 0);
+  color: rgba(255, 255, 255, 1);
+}
+.index .masthead.zoomed:after {
+  opacity: 0;
+}
+.index .masthead.zoomed {
+  background-color: #25282A;
+}
+.index .masthead {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 0em;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0px;
+  border-bottom: none;
+
+  background-color: #000000;
+  background-position: 50% 50%;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+.index .masthead:after {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  content: '';
+  background-size: cover;
+
+  opacity: 0.45;
+}
+.index .masthead,
+.index .masthead:after {
+  -ms-transition:
+    background 6s cubic-bezier(0.680, -0.550, 0.265, 1.4) 0s,
+    opacity 6s cubic-bezier(0.680, -0.550, 0.265, 1.4) 0s
+  ;
+  -moz-transition:
+    background 6s cubic-bezier(0.680, -0.550, 0.265, 1.4) 0s,
+    opacity 6s cubic-bezier(0.680, -0.550, 0.265, 1.4) 0s
+  ;
+  -webkit-transition:
+    background 6s cubic-bezier(0.680, -0.550, 0.265, 1.4) 0s,
+    opacity 6s cubic-bezier(0.680, -0.550, 0.265, 1.4) 0s
+  ;
+  transition:
+    background 6s cubic-bezier(0.680, -0.550, 0.265, 1.4) 0s,
+    opacity 6s cubic-bezier(0.680, -0.550, 0.265, 1.4) 0s
+  ;
+}
+.index .masthead .container {
+  height: 55vh;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  min-height: 600px;
+
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+ .masthead .container {
+  padding: 15rem 0em;
+}
+.index .following.bar iframe.github {
+  margin-top: 0px;
+}
+.index .following.bar .menu .item {
+  display: block;
+}
+.index.pushed .masthead,
+.index.pushed .following.bar {
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+.index > .pusher > .footer {
+  padding-left: 0em;
+}
+
+.index .light.following.bar {
+  padding: 0em 0em;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #DDDDDD;
+  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.04);
+}
+
+.index .masthead.segment .typed-cursor {
+  position: relative;
+  top: -0.05em;
+  left: -0.25em;
+  visibility: hidden;
+  opacity: 1;
+  -webkit-animation: blink 0.7s infinite;
+  -moz-animation: blink 0.7s infinite;
+  animation: blink 0.7s infinite;
+  -webkit-transition: opacity 0.7s ease;
+  -moz-transition: opacity 0.7s ease;
+  transition: opacity 0.7s ease;
+}
+.index .masthead.segment .typed-cursor.stop {
+  opacity: 0;
+  -moz-animation-duration: 0s;
+  -webkit-animation-duration: 0s;
+  animation-duration: 0s;
+}
+@keyframes blink {
+  0% { opacity:1; }
+  50% { opacity:0; }
+  100% { opacity:1; }
+}
+@-webkit-keyframes blink {
+  0% { opacity:1; }
+  50% { opacity:0; }
+  100% { opacity:1; }
+}
+@-moz-keyframes blink {
+  0% { opacity:1; }
+  50% { opacity:0; }
+  100% { opacity:1; }
+}
+.index .vertical.segment {
+  box-shadow: none;
+}
+.index .vertical.stripe.intro.segment {
+  min-height: 100vh;
+}
+.index .masthead.segment h1 {
+  font-size: 3em;
+  color: rgba(255, 255, 255, 1);
+  line-height: 1.2;
+  margin: 0px 0px 0px;
+  padding-bottom: 0px;
+  -moz-perspective: 500px;
+  -webkit-perspective: 500px;
+  perspective: 500px;
+
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+
+  -moz-transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+.index .masthead.segment h1 .tagline {
+  font-size: 0.75em;
+}
+.index .masthead.segment h1 > .library {
+  display: block;
+  font-size: 1.75em;
+  font-weight: bold;
+}
+.index .masthead.segment h1 b {
+  display: inline-block;
+  font-weight: 500;
+}
+.index .masthead.segment h1 .text {
+  display: inline-block;
+  font-weight: 300;
+  margin-left: -0.4em;
+}
+.index .masthead h2 {
+  font-weight: normal;
+  margin: 0px 0 16px 0px;
+  font-size: 1.75em;
+  border-bottom: none;
+  line-height: 1;
+}
+.index .masthead p {
+  font-size: 1.5em;
+  margin: 1em 0em 1.5em;
+  padding: 0px;
+}
+.index .ui.header {
+  font-weight: normal;
+}
+.index .footer .ui.header {
+  font-weight: bold;
+}
+.index .introduction {
+  position: relative;
+  clear: both;
+  display: block;
+  text-align: center;
+}
+.index .introduction .buttons {
+  margin-top: 3em;
+}
+.index .advertisement {
+  display: none !important;
+  padding-left: 0;
+  position: absolute;
+  left: auto;
+  right: 6em;
+  top: 50%;
+  transform: translateY(-50%);
+  vertical-align: top;
+}
+.index .fixed.launch.button {
+  display: none;
+  top: 100px;
+}
+.index .main.menu {
+  top: 0px;
+}
+.index pre.console {
+  height: 120px;
+}
+.intro.segment h1 + p {
+  font-size: 22px;
+}
+.demo.row .example > .ui.label:not(.empty) {
+  margin-bottom: 1em;
+}
+.demo.row .ui.progress {
+  margin-bottom: 2.5em;
+}
+.demo.row h4 {
+  font-weight: bold !important;
+  margin: 0em 0em 1em !important;
+}
+.demo.row .example {
+  clear: both;
+  padding-top: 3em;
+  margin-top: 3em;
+}
+.demo.row .ui.menu,
+.demo.row .ui.card {
+  width: 100%;
+}
+.demo.row .ui.card {
+  width: 100%;
+  max-width: 400px;
+}
+.index .hidden.code {
+  visibility: hidden;
+}
+.index .demo.row .example {
+  clear: both;
+  padding-top: 1.5em;
+  margin-top: 1.5em;
+}
+.index .demo.row .example:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+.index .demo.row .example:last-child {
+  margin-bottom: 0em;
+}
+.index .following.bar {
+  position: fixed;
+  top: 0px;
+  z-index: 900;
+  left: 0%;
+  padding: 2em 0em;
+  width: 100%;
+  box-shadow: 0px 0px 0px 0px transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    padding 0.5s ease,
+    background 0.5s ease,
+    box-shadow 0.5s ease,
+    border 0.5s ease
+  ;
+}
+.index .following.bar > .menu .item {
+  transition: all 0.5s ease;
+}
+.index.pushed .following.bar .menu .item,
+.index.pushed .following.bar {
+  transition: none;
+}
+.index .following.bar .additional.item[data-site="learn"]:hover {
+  color: #D9499A;
+}
+.index .following.bar span.additional.item {
+  cursor: default;
+  color: rgba(0, 0, 0, 0.2);
+}
+.index .following.bar .inverted span.additional.item {
+  color: rgba(255, 255, 255, 0.2);
+}
+.index .following.bar .column > .menu {
+  margin-top: 0px;
+  height: 35px;
+}
+.index .following.bar .network.menu .item {
+  font-weight: bold;
+}
+.index .following.bar .item iframe {
+  margin-left: 10px;
+}
+.index .following.bar .network.menu .view-ui {
+  margin-right: 1em;
+}
+.index .light.following.bar .network.menu .view-ui {
+  color: #00B5AD;
+}
+.index .light.following.bar .inverted.network.menu .view-ui {
+  color: #6DFFFF;
+}
+.index .following .logo {
+  float: left;
+  width: 35px;
+  margin-right: 1em;
+}
+.index .following .logo .side {
+  width: 35px;
+}
+.masthead .version.label:after {
+  background-color: #000000 !important;
+}
+.index .following .version.label {
+  margin: 0.25em 0px 0px 1em;
+}
+.index .stripe .grid .row {
+  margin: 2rem 0rem;
+}
+.index .feature.stripe .grid .row {
+  margin: 0rem;
+}
+.index .feature.stripe .column {
+  display: flex;
+  -ms-flex-direction: column;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  flex-direction: column;
+}
+.index .feature.stripe p {
+  -webkit-flex: 1 0 auto;
+  -moz-flex: 1 0 auto;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+  margin: 0.5em 0em 2em;
+}
+.stripe .ui.vertical.divider {
+  font-size: 1rem;
+}
+.index .feature.stripe .icon.header .icon.image {
+  width: auto;
+  height: 65px;
+  margin-bottom: 20px;
+}
+.index .stripe .icon.header .icon.image {
+  height: 65px;
+  margin-bottom: 20px;
+}
+.index .community.stripe {
+  box-shadow: 0 -1px 0 0 rgba(0, 0, 0, 0.1);
+  padding: 4em 0;
+}
+.index .stripe .icon.header i.icon {
+  font-size: 2em;
+}
+.index .final.stripe {
+  border-top: 1px solid #DDDDDD;
+  background-color: #F8F8F8;
+}
+.alternate.stripe {
+  background-color: #F2F3F5;
+}
+.index .inverted.stripe {
+  background-color: #1B1C1D;
+}
+.index .inverted.stripe p {
+  color: #FFFFFF;
+}
+.solid,
+.stripe {
+  background-color: #FFFFFF;
+  padding: 10em 0px;
+  border-radius: 0em;
+  margin: 0em;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+.theming.stripe {
+  -webkit-transform: none;
+  transform: none;
+}
+.stripe h1 {
+  font-size: 40px;
+}
+.stripe h2 {
+  font-size: 26px;
+}
+.stripe h3 {
+  font-size: 20px;
+}
+.feature.stripe {
+  padding: 3em 0em;
+}
+.theming.stripe .left.aligned.column {
+  padding-top: 8em;
+}
+.theming.stripe .hljs.code {
+  height: 483px;
+  max-height: 483px;
+}
+.theming .source.grid {
+  display: none !important;
+  margin: 2rem 2rem -4rem;
+}
+.theming .source.grid.visible {
+  display: block;
+  display: flex !important;
+}
+.theming.stripe .buttons {
+  vertical-align: top;
+}
+.theming.stripe .button {
+  margin-bottom: 0.5em;
+}
+.stripe .column > p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 1em 0em;
+}
+.dark.stripe {
+  background-color: #333333;
+  background: url(/images/dark-bg.png) repeat;
+  color: #FFFFFF;
+}
+.stripe .column > .label {
+  margin-bottom: 1em;
+}
+.solid {
+  background-color: #FFFFFF;
+  -webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.1);
+}
+.solid .column {
+  color: #555555;
+}
+.solid .column p b {
+  color: rgba(0, 0, 0, 0.9);
+}
+.solid .column p {
+  color: rgba(0, 0, 0, 0.5);
+}
+.index .promo.stripe {
+  padding: 3em 0em;
+}
+.index .email.stripe {
+  padding: 5em 0em;
+}
+.index .email.stripe p {
+  margin: -0.5em 0em 1em;
+}
+.index .email.stripe .input {
+  width: 450px;
+}
+.index .email.stripe .submit.button {
+  margin-left: 1em;
+}
+@media only screen and (max-width : 400px) {
+  .index .advertisement {
+    display: none;
+    margin-left: -130px !important;
+  }
+  .index .carbonad {
+    width: 260px !important;
+  }
+  .index .masthead.segment h1  {
+    font-size: 1.75em !important;
+  }
+  .index .feature.stripe {
+    padding: 1em;
+  }
+}
+@media only screen and (max-width : 600px) {
+  .index .solid,
+  .index .stripe {
+    padding: 4em 0em;
+  }
+  .index .masthead.segment h1 .text {
+    margin-left: 0em;
+  }
+  .index .following.bar {
+    display: none;
+  }
+  .index .masthead:before {
+    display: none;
+  }
+  .index .following.bar .column {
+    text-align: center;
+  }
+  .index .following .logo {
+    float: none;
+  }
+  .index .codebase.stripe {
+    display: none;
+  }
+  .index .following .version.label {
+    vertical-align: top;
+    margin-top: 0em;
+  }
+   .masthead .container {
+    padding: 6rem 0rem;
+  }
+  .index .masthead.segment h1 {
+    font-size: 2.25em;
+  }
+  .index .email.stripe .input {
+    width: 100%;
+  }
+  .index .following .secondary.menu {
+    display: none;
+  }
+  .index .email.stripe .submit.button {
+    margin-top: 0.5em;
+  }
+  .index .stripe .icon.header .icon.image {
+    height: 50px;
+  }
+  .index .stripe {
+    padding: 2em 0em !important;
+  }
+}
+@media only screen and (max-width : 650px) {
+  .index .fixed.launch.button {
+    display: none;
+  }
+   .stripe h1 {
+    font-size: 32px;
+  }
+}
+@media only screen and (min-width : 601px) {
+   .theming .source.button {
+    display: none;
+  }
+  .index .main.menu {
+    display: none;
+  }
+  .index .fixed.launch.button {
+    display: none;
+  }
+}
+@media only screen and (max-width : 810px) {
+  .index .masthead.segment h1 > .library {
+    font-size: 1.75em;
+  }
+  .index .feature.stripe p {
+    height: auto;
+    min-height: 0px;
+  }
+  .index .container {
+    margin-left: 0em;
+    margin-right: 0em;
+  }
+   .solid,  .stripe {
+    padding: 6em 0em;
+  }
+  .index .masthead .container {
+    margin-top: 50px;
+  }
+  .index .following.bar span.additional.item {
+    display: none;
+    visibility: hidden !important;
+  }
+  .index .following.bar .network.menu .view-ui {
+    margin-right: 0.75em;
+  }
+  .index .masthead .container {
+    min-height: 350px;
+    height: auto;
+  }
+}
+@media only screen and (max-width : 1040px) {
+  .index .following.bar .network.menu .view-ui {
+    margin-right: 0.5em;
+  }
+}
+@media only screen and (max-width: 1300px) {
+  .index .advertisement {
+    position: absolute;
+    top: auto;
+    left: 50%;
+    bottom: 2rem;
+    margin-left: -175px;
+    -webkit-transform: none;
+    -moz-transform: none;
+    -ms-transform: none;
+    transform: none;
+  }
+  .index .inverted.advertisement .carbonad-img {
+    margin-top: 0px;
+  }
+  .index #carbonads-container {
+    float: none;
+  }
+  .index .carbonad {
+    width: 340px;
+  }
+  .index .carbonad-text,
+  .index .carbonad-tag {
+    float: none;
+    display: block;
+    text-align: left;
+    margin-left: 160px;
+    width: 170px;
+  }
+}
+.last.container {
+  margin-bottom: 300px !important;
+}
+h1.ui.center.header {
+  margin-top: 3em;
+}
+h2.ui.center.header {
+  margin: 3em 0;
+}
+h3.ui.center.header {
+  margin-top: 2em;
+  padding: 2em 0em;
+}
+.ui.footer.segment {
+  margin: 5em 0em 0em;
+  padding: 5em 0em;
+}
+.ui.container.vmargin {
+  margin: 5rem 0em calc(2rem - 0.14285714em );
+}
+#image_input_container {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  padding: 0em;
+}
+#image_input_container > input {
+  flex-grow: 1;
+  margin-right: 1rem;
+  margin-left: 0;
+}
+.vspace {
+  height: 5em;
+}
+.top_description {
+  font-size: 1.33em;
+}
+.force_hide {
+  display: none !important;
+}
+.show_cat_button {
+  margin-top: 0.5rem !important;
+}
+</style>{{end}}
+{{define "login.css"}}<style type="text/css">
+body {
+  background-color: #EEE;
+}
+body > .grid {
+  height: 100%;
+}
+.image {
+  margin-top: -100px;
+}
+.column {
+  max-width: 450px;
+}
+#thumbnail {
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+}
+#imgChangeButton {
+  margin-top: 1rem;
+}
+</style>{{end}}
+{{define "main.js"}}<script type="text/javascript">
+$(document).ready(function() {
+  var token = window.localStorage.getItem("accessToken");
+  if (!token) {
+    location.href = App.url
+  }
+});
+var OpenModal = function() {
+  $('.large.modal').modal('show');
+};
+var CloseModal = function() {
+  $('.large.modal').modal('hide');
+};
+var ShowCategory2 = function() {
+  $("#category2").removeClass("force_hide");
+  $("#show_cat2").addClass("force_hide");
+};
+var ShowCategory3 = function() {
+  $("#category3").removeClass("force_hide");
+  $("#show_cat3").addClass("force_hide");
+};
+var ClickMenu = function() {
+  $('.ui.sidebar').sidebar('toggle');
+};
+var SetConst = function() {
+  var title = $("#sitetitle").val();
+  var image = $("#headimage").val();
+  if (!title) {
+    $("#set_const").removeClass('disabled');
+    $("#warning").text("No title.").removeClass("hidden").addClass("visible");
+    return false;
+  }
+  if (!image) {
+    $("#set_const").removeClass('disabled');
+    $("#warning").text("No image.").removeClass("hidden").addClass("visible");
+    return false;
+  }
+  const data = {action: "set_const", token: "", title, image};
+  actionHandle("#set_const", data, (res)=>{
+    $("#set_const").removeClass('disabled');
+    $("#info").removeClass("hidden").addClass("visible");
+  }, onError);
+}
+var SetSample = function() {
+  const data = {action: "set_sample", token: ""};
+  actionHandle("#set_sample", data, (res)=>{
+    $("#set_sample").removeClass('disabled');
+    $("#info").removeClass("hidden").addClass("visible");
+  }, onError);
+}
+var GetItemCategoryList = function() {
+  const data = {action: "get_item_category_list", token: ""};
+  actionHandle("#get_item_category_list", data, (res)=>{
+    $("#info").removeClass("hidden").addClass("visible");
+    App.itemList = res.itemList;
+    res.itemList.forEach( function(item) {
+      var d = JSON.parse(item.data)
+      var optionTag = $("<option>" + d.title + "</option>", {
+        "value": d.id
+      });
+      $("#selectItem").append(optionTag);
+    });
+    App.categoryList = res.categoryList;
+    res.categoryList.forEach( function(item) {
+      var optionTag = $("<option>", {
+        "value": item.data
+      });
+      $("#category").append(optionTag);
+    });
+  }, onError);
+}
+var GetCategoryList = function() {
+  const data = {action: "get_category_list", token: ""};
+  actionHandle("#get_category_list", data, (res)=>{
+    $("#info").removeClass("hidden").addClass("visible");
+    App.categoryList = res.categoryList;
+    res.categoryList.forEach( function(item) {
+      var optionTag = $("<option>", {
+        "value": item.data
+      });
+      $("#category").append(optionTag);
+    });
+  }, onError);
+}
+var AddItem = function() {
+  const title = $('#formContent input[name="title"]').val();
+  const description = $('#formContent input[name="description"]').val();
+  const image = $('#formContent input[name="image"]').val();
+  var categoryNames = [];
+  const c1 = $('#formContent input[name="category1"]').val();
+  const c2 = $('#formContent input[name="category2"]').val();
+  const c3 = $('#formContent input[name="category3"]').val();
+  if (!!c1 && c1.length > 0) {
+    categoryNames.push(c1);
+  }
+  if (!!c2 && c2.length > 0) {
+    categoryNames.push(c2);
+  }
+  if (!!c3 && c3.length > 0) {
+    categoryNames.push(c3);
+  }
+  const categories = JSON.stringify(categoryNames);
+  const data = {action: "add_item", token: "", title, description, image, categories};
+  actionHandle("#add_item", data, (res)=>{
+    $("#add_item").removeClass('disabled');
+    $("#info").removeClass("hidden").addClass("visible");
+  }, onError);
+}
+var FixItem = function() {
+  const id = $('#formContent input[name="id"]').val();
+  const title = $('#formContent input[name="title"]').val();
+  const description = $('#formContent input[name="description"]').val();
+  const image = $('#formContent input[name="image"]').val();
+  var categoryNames = [];
+  const c1 = $('#formContent input[name="category1"]').val();
+  const c2 = $('#formContent input[name="category2"]').val();
+  const c3 = $('#formContent input[name="category3"]').val();
+  if (!!c1 && c1.length > 0) {
+    categoryNames.push(c1);
+  }
+  if (!!c2 && c2.length > 0) {
+    categoryNames.push(c2);
+  }
+  if (!!c3 && c3.length > 0) {
+    categoryNames.push(c3);
+  }
+  const categories = JSON.stringify(categoryNames);
+  const old_categories = JSON.stringify(App.oldCategory)
+  const data = {action: "fix_item", token: "", id, title, description, image, categories, old_categories};
+  actionHandle("#fix_item", data, (res)=>{
+    $("#fix_item").removeClass('disabled');
+    $("#info").removeClass("hidden").addClass("visible");
+  }, onError);
+}
+var GetJs = function() {
+  console.log("get_js")
+}
+var FixJs = function() {
+  const data = {action: "fixjs", token: "", jsstring};
+  actionHandle("#fix_css", data, (res)=>{
+    $("#fix_css").removeClass('disabled');
+    $("#info").removeClass("hidden").addClass("visible");
+  }, onError);
+}
+var GetCss = function() {
+  console.log("get_css")
+}
+var FixCss = function() {
+  const data = {action: "fix_css", token: "", cssstring};
+  actionHandle("#fix_css", data, (res)=>{
+    $("#fix_css").removeClass('disabled');
+    $("#info").removeClass("hidden").addClass("visible");
+  }, onError);
+}
+var actionHandle = function(element, data, callback, onerror) {
+  $(element).addClass('disabled');
+  data.token = window.localStorage.getItem("accessToken");
+  if (!data.token) {
+    $(element).removeClass('disabled');
+    $("#warning").text("Not login.").removeClass("hidden").addClass("visible");
+    return false;
+  }
+  request(data, callback, onerror);
+}
+var onError = function(e) {
+  if (!!e.responseJSON) {
+    console.log(e.responseJSON.message);
+    $("#warning").text(e.responseJSON.message).removeClass("hidden").addClass("visible");
+  } else {
+    console.log(e.message);
+    $("#warning").text(e.message).removeClass("hidden").addClass("visible");
+  }
+};
+var request = function(data, callback, onerror) {
+  $.ajax({
+    type:          'POST',
+    dataType:      'json',
+    contentType:   'application/json',
+    scriptCharset: 'utf-8',
+    data:          JSON.stringify(data),
+    url:           App.url
+  })
+  .done(function(res) {
+    callback(res);
+  })
+  .fail(function(e) {
+    onerror(e);
+  });
+};
+function parseJson (data) {
+  var res = {};
+  for (i = 0; i < data.length; i++) {
+    res[data[i].name] = data[i].value;
+  }
+  return res;
+}
+function toBase64 (file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+function onConverted () {
+  return function(v) {
+    App.imgdata = v;
+    $('#preview').attr('src', v);
+  }
+}
+function UploadImage(elm) {
+  if (!!App.imgdata) {
+    $(elm).addClass("disabled");
+    putImage();
+  } else {
+    CloseModal();
+  }
+}
+function putImage() {
+  var token = window.localStorage.getItem("accessToken");
+  if (!token) {
+    return false;
+  }
+  const file = $('#image').prop('files')[0];
+  const data = {action: 'upload_img', filename: file.name, filedata: App.imgdata, token: token};
+  $.ajax({
+    type:          'POST',
+    dataType:      'json',
+    contentType:   'application/json',
+    scriptCharset: 'utf-8',
+    data:          JSON.stringify(data),
+    url:           App.url
+  })
+  .done(function(res) {
+    App.imgUrl = res.imgurl;
+    if (App.imgUrl.length > 0) {
+      $("#img_url").val(App.imgUrl);
+    }
+  })
+  .fail(function(e) {
+    console.log(e);
+  })
+  .always(function() {
+    CloseModal();
+  });
+}
+function ChangeImage () {
+  const file = $('#image').prop('files')[0];
+  toBase64(file).then(onConverted());
+}
+var SelectContent = function() {
+  var i = $("#selectItem").prop("selectedIndex");
+  if (i > 0) {
+    var d = JSON.parse(App.itemList[i - 1].data);
+    App.oldCategory = d.categoryids;
+    $('#formContent input[name="id"]').val(App.itemList[i - 1].id);
+    $('#formContent input[name="title"]').val(d.title);
+    $('#formContent input[name="description"]').val(d.description);
+    $('#formContent input[name="image"]').val(d.image);
+    if (d.categoryids.length > 0) {
+      $('#formContent input[name="category1"]').val(GetCategoryName(d.categoryids[0]));
+    }
+    if (d.categoryids.length > 1) {
+      $('#formContent input[name="category2"]').val(GetCategoryName(d.categoryids[1]));
+    }
+    if (d.categoryids.length > 2) {
+      $('#formContent input[name="category3"]').val(GetCategoryName(d.categoryids[2]));
+    }
+  }
+};
+var GetCategoryName = function(categoryId) {
+  var category = App.categoryList.find(v => v.id == categoryId);
+  if (!!category && category.data.length > 0) {
+    return category.data;
+  }
+  return "";
+};
+var GetCategoryId = function(categoryName) {
+  var category = App.categoryList.find(v => v.id == categoryId);
+  if (!!category && category.data.length > 0) {
+    return category.data;
+  }
+  return "";
+};
+var App = { imgdata: null, url: location.origin + {{ .ApiPath }}, imgUrl: '', itemList: null, categoryList: null, oldCategory: null };
+</script>{{end}}
+{{define "login.js"}}<script type="text/javascript">
+$(document).ready(function() {
+  let params = new URLSearchParams(document.location.search.substring(1));
+  let page = params.get("page");
+  if (page == "profile") {
+    getuser();
+  } else if (page == "logout") {
+    logout();
+  }
+});
+
+var Login = function() {
+  $("#submit").addClass('disabled');
+  var name = $("#nickName").val();
+  var pass = $('#password').val();
+  if (!name | !pass) {
+    return false;
+  }
+  const action = "login";
+  const data = {action, name, pass};
+  request(data, (res)=>{
+    window.localStorage.setItem("accessToken", res.token);
+    window.setTimeout(() => {location.href = "./?page=top";}, 1000);
+  }, onError);
+};
+
+var ChangePass = function() {
+  var token = window.localStorage.getItem("accessToken");
+  if (!token) {
+    return false;
+  }
+  if (!checkPass($("#newpassword").val())) {
+    $("#newpassword").val('');
+    $("#passwarning").removeClass("hidden").addClass("visible");
+    return
+  }
+  $("#submit").addClass('disabled');
+  var pass = $('#password').val();
+  var newpass = $('#newpassword').val();
+  if (!token | !pass | !newpass) {
+    return false;
+  }
+  const action = "change_pass";
+  const data = {action, token, pass, newpass};
+  request(data, (res)=>{
+    console.log(res);
+    $("#info").removeClass("hidden").addClass("visible");
+  }, onError);
+};
+
+var SignUp = function() {
+  if (!checkPass($("#password").val())) {
+    $("#password").val('');
+    $("#passwarning").removeClass("hidden").addClass("visible");
+    return
+  }
+  $("#submit").addClass('disabled');
+  var mail = $("#email").val();
+  var name = $("#nickName").val();
+  var pass = $("#password").val();
+  if (!mail | !name | !pass) {
+    return false;
+  }
+  const action = "sign_up";
+  const data = {action, mail, name, pass};
+  request(data, (res)=>{
+    console.log(res);
+    $("#info").removeClass("hidden").addClass("visible");
+  }, onError);
+};
+
+var Activate = function() {
+  $("#submit").addClass('disabled');
+  var name = $("#nickName").val();
+  var code = $("#activationKey").val();
+  if (!name | !code) {
+      return false;
+  }
+  const action = "confirm_signup";
+  const data = {action, name, code};
+  request(data, (res)=>{
+    console.log(res);
+    $("#info").removeClass("hidden").addClass("visible");
+  }, onError);
+};
+
+var GetUser = function() {
+  var token = window.localStorage.getItem("accessToken");
+  if (!token) {
+    $("#settings").addClass("hidden");
+    $("#warning").text("You are not logged in yet.").removeClass("hidden").addClass("visible");
+    return false;
+  }
+  const action = "get_user";
+  const data = {action, token};
+  request(data, (res)=>{
+    console.log(res);
+    $("#name").text(res.name);
+  }, onError);
+};
+
+var Logout = function() {
+  var token = window.localStorage.getItem("accessToken");
+  if (!token) {
+    return false;
+  }
+  const action = "logout";
+  const data = {action, token};
+  request(data, (res)=>{
+    console.log(res);
+    window.localStorage.setItem("accessToken", "");
+    console.log("return to top");
+  }, onError);
+};
+
+var request = function(data, callback, onerror) {
+  $.ajax({
+    type:          'POST',
+    dataType:      'json',
+    contentType:   'application/json',
+    scriptCharset: 'utf-8',
+    data:          JSON.stringify(data),
+    url:           App.url
+  })
+  .done(function(res) {
+    callback(res);
+  })
+  .fail(function(e) {
+    onerror(e);
+  });
+};
+
+var checkPass = function(s) {
+  const ra = new RegExp(/[0-9]+/);
+  const rb = new RegExp(/[a-z]+/);
+  const rc = new RegExp(/[A-Z]+/);
+  const rd = new RegExp(/[#\\(\\)_\\-\\@\\%\\#\\&\\$\\^\\*]+/);
+  return s.length > 7 && ra.test(s) && rb.test(s) && rc.test(s) && rd.test(s)
+};
+
+var onError = function(e) {
+  console.log(e.responseJSON.message);
+  $("#warning").text(e.responseJSON.message).removeClass("hidden").addClass("visible");
+  $("#submit").removeClass('disabled');
+};
+function OpenModal() {
+  $('.large.modal').modal('show');
+}
+function CloseModal() {
+  $('.large.modal').modal('hide');
+}
+var App = { imgdata: null, url: location.origin + {{ .ApiPath }}, imgUrl: '' };
+</script>{{end}}
+{{define "favicon.ico"}}data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADf87v/3/e8/976vv/e+b3/3/S6/9/zuf/f9rv/3vm+/975vv/f9rv/3/O5/9/0uv/e+b3/3vq+/9/3vP/f9Lr/3vi9/+C/m//hj4P/4KGL/9/stf/e+b7/39mr/+GUhf/hk4T/39ep/975vv/f7bb/4KSN/+GPg//gvJn/3/e8/976v//hlob/4idH/+FEZv/f6rX/3v/B/+DMo//iJ1D/4idO/+DHoP/e/8H/3+22/+FPaf/iJ0f/4Y+D/975vv/e+b7/4KmP/+FOaf/hdnf/3+Cv/9/yuf/gyaL/4Vtt/+FZbP/gxp//3/K6/9/ir//henj/4U9p/+CjjP/e+b3/3/S6/9/vt//f7rf/3+ay/+F1d//hRmb/4J2K/9/wuP/f8bn/4KKM/+FGZv/hcHT/3+Sx/9/vt//f7rf/3/S6/9/0uv/f9Lr/3vi9/9/ut//hT2n/4idH/+GRg//e+r7/3vu+/+GYh//iJ0f/4URm/9/stf/e+L3/3/S6/9/0uv/f9Lr/3/O5/9/0uv/f77f/4KmP/+GXhv/gv5v/3/a7/9/2vP/gwpz/4ZeG/+Cnj//f7bb/3/W7/9/zuf/f9Lr/3/S6/9/zuf/f8rr/3/O5/974vf/e+b7/3/e8/9/0uv/f9Lr/3/e8/975vv/e+L3/3/O5/9/yuv/f87n/3/S6/9/zu//f97z/3vq+/975vv/e+L3/3vi9/9/3vP/f9Lr/3/S6/9/2vP/e+L3/3vi9/975vv/e+b7/3/e9/9/0uv/e+L3/4L+b/+GRg//gnIn/4ZqI/+GQhP/gu5j/3/a8/9/3vP/gvpv/4ZCD/+CbiP/gm4j/4ZKE/+C7mf/f97z/3vq//+GVhv/iJ0v/4ihf/+EuYf/iJ1H/4ZCE/974vf/e+b7/4ZeH/+InUP/hMWH/4ihe/+InTP/hjYL/3vm+/975vv/gqI//4VNq/+Fqcv/hWGv/4TBh/+CbiP/f973/3vm9/+Chi//hLGH/4Vhs/+Fpcv/hVmv/4KKM/975vf/f9Lr/3++3/9/ut//f5rL/4Wpy/+IoX//gnIn/3/e9/975vf/goYv/4ihe/+FlcP/f47D/3++3/9/ut//f9Lr/3/S6/9/0uv/e+L3/3+63/+FTav/iJ0v/4ZGD/974vf/e+b7/4ZiH/+InS//hSmf/3+y1/974vf/f9Lr/3/S6/9/0uv/f87n/3/S6/9/vt//gqI//4ZWG/+C/m//f9rz/3/e8/+DCnP/hlYb/4KaO/9/ttv/f9bv/3/O5/9/0uv/f9Lr/3/S6/9/0uv/f9Lr/3vm+/976vv/e+L3/3/S6/9/zu//e+L3/3vq//975vv/f9Lr/3/S6/9/0uv/f9Lr/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=={{end}}

@@ -1,0 +1,79 @@
+{{define "base"}}
+<!doctype html>
+<html>
+{{template "headtag" .}}
+  <body class="index pushable" ontouchstart="">
+    <div class="ui vertical inverted sidebar menu left" id="toc" style="">
+      <a class="item" href="./top">
+        <b>TOP</b>
+      </a>
+      <a class="item" href="{{ .ProductUrl }}">
+        <b>Product Page</b>
+      </a>
+      <a class="item" href="https://semantic-ui.com/">
+        <b>Semantic UI</b>
+      </a>
+      <div class="item">
+        <div class="header">Contents</div>
+        <div class="menu">
+          <a href="./add" class="item">Add Item</a>
+          <a href="./fix" class="item">Fix Item</a>
+          <a href="./js" class="item">Fix JS</a>
+          <a href="./css" class="item">Fix CSS</a>
+          <a href="./setting" class="item">Setting</a>
+        </div>
+      </div>
+      <div class="item">
+        <div class="header">Option</div>
+        <div class="menu">
+          <a class="item" href="./dynamodb">
+            Dynamodb Management
+          </a>
+          <a class="item" href="./s3">
+            S3 Management
+          </a>
+          <a class="item" href="{{ .ProductUrl }}sitemap" target="_blank">
+            Sitemap
+          </a>
+        </div>
+      </div>
+      <a class="item" href="./">
+        <b>Logout</b>
+      </a>
+    </div>
+    <div class="ui black big launch right attached fixed button">
+      <i class="content icon"></i>
+      <span class="text">Menu</span>
+    </div>
+    <div class="ui fixed inverted main menu">
+      <div class="ui container">
+        <a id="menu_icon" class="launch icon item" onclick="ClickMenu();">
+          <i class="content icon"></i>
+        </a>
+        <div class="right menu">
+          <div class="vertically fitted borderless item">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pusher">
+      <div class="full height">
+        <div class="following bar">
+          <div class="ui">
+            <div class="ui large secondary network menu inverted">
+              <a id="menu_button" class="view-ui item" onclick="ClickMenu();">
+                <i class="sidebar icon"></i> Menu
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="ui vertical stripe intro segment">
+          <div class="stackable very relaxed ui container">
+{{template "contenttag" .}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+{{end}}
