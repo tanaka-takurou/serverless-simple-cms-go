@@ -64,7 +64,6 @@ Resources:
           TABLE_NAME: !Ref 'ItemTable'
           BUCKET_NAME: !Ref 'ImgBucket'
           REGION: !Ref 'AWS::Region'
-          URL: !Join [ '', [ 'https://', !Ref FrontPageApi, '.execute-api.',!Ref 'AWS::Region','.amazonaws.com/'] ]
       Events:
         FrontPageApi:
           Type: HttpApi

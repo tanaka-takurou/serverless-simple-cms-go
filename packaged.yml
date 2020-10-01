@@ -8,6 +8,19 @@ Parameters:
   ManagementPageApiStageName:
     Type: String
     Default: ProdStage
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: Serverless-Application-Simple-CMS
+    Description: Serverless Application Simple Content Management System
+    Author: tanaka-takurou
+    SpdxLicenseId: MIT
+    LicenseUrl: s3://sam-proto-bucket-2020/15f4ad442f765041632182da1811abcf
+    ReadmeUrl: s3://sam-proto-bucket-2020/846ed6dcecbda4148748530faabded2f
+    Labels:
+    - ServerlessRepo
+    HomePageUrl: https://github.com/tanaka-takurou/serverless-simple-cms-go/
+    SemanticVersion: 0.0.1
+    SourceCodeUrl: https://github.com/tanaka-takurou/serverless-simple-cms-go/
 Resources:
   FrontPageApi:
     Type: AWS::Serverless::HttpApi
@@ -34,7 +47,7 @@ Resources:
   FrontPageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://sam-proto-bucket-2020/acf58f0020d538893b5daa063b7e3f18
+      CodeUri: s3://sam-proto-bucket-2020/155962198c0d4aa6b927f0284fc265fd
       Handler: main
       MemorySize: 256
       Runtime: go1.x
@@ -103,7 +116,7 @@ Resources:
   ManagementPageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://sam-proto-bucket-2020/58737c39dfd7390cad38cb5f42724cb8
+      CodeUri: s3://sam-proto-bucket-2020/329ec4a7e403fa98a47cf424dc9ca462
       Handler: main
       MemorySize: 256
       Runtime: go1.x
@@ -152,7 +165,7 @@ Resources:
   ManagementMainFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://sam-proto-bucket-2020/34a92cee1f3b172f610e8930de0cd757
+      CodeUri: s3://sam-proto-bucket-2020/aa627e8893b436965f52ab1588be5459
       Handler: main
       MemorySize: 256
       Runtime: go1.x
