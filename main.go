@@ -94,7 +94,7 @@ func HandleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 	tmp := template.New("tmp")
 	contentType := "text/html"
 	var dat PageData
-	dat.URL = os.Getenv("URL")
+	dat.URL = "https://" + request.RequestContext.DomainName + "/"
 	p := request.PathParameters
 	q := request.QueryStringParameters
 	r := request.Resource
