@@ -613,10 +613,10 @@ func FixItem(ctx context.Context, id int, title string, description string, imag
 		return err
 	}
 	for _, v := range oldCategoryIds {
-		deletedId := 0
+		deletedId := v
 		for _, w := range categoryIds {
 			if v == w {
-				deletedId = v
+				deletedId = 0
 				break
 			}
 		}
