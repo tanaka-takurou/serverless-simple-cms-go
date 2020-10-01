@@ -120,15 +120,10 @@ func HandleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 		if len(category) == 0 {
 			category = q["category"]
 		}
-		// contentList_ := scanContents(ctx)
-		// categoryList_ := scanCategories(ctx)
-		// dat.CategoryNameList = getCategoryNameList(categoryList_)
-		// dat.CategoryDisplayList = getCategoryDisplayList(categoryList_)
 		maxContentPerPage := 10
 		maxPage := int(math.Ceil(float64(len(dat.Content.ItemList))/float64(maxContentPerPage)))
 		tmp = getDefaultTemplates()
 		if false {
-			log.Println("Category Page")
 		// if contains(dat.CategoryNameList, category) {
 		/*
 			categoryContentMap_ := scanCategoryContents(ctx)
