@@ -10,6 +10,19 @@ Parameters:
     Type: String
     Default: 'ProdStage'
 
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: Serverless-Application-Simple-CMS
+    Description: 'Serverless Application Simple Content Management System'
+    Author: tanaka-takurou
+    SpdxLicenseId: MIT
+    LicenseUrl: LICENSE.txt
+    ReadmeUrl: README.md
+    Labels: ['ServerlessRepo']
+    HomePageUrl: https://github.com/tanaka-takurou/serverless-simple-cms-go/
+    SemanticVersion: 0.0.1
+    SourceCodeUrl: https://github.com/tanaka-takurou/serverless-simple-cms-go/
+
 Resources:
   FrontPageApi:
     Type: AWS::Serverless::HttpApi
