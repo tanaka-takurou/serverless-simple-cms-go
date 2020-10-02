@@ -121,23 +121,29 @@ func HandleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 			category = q["category"]
 		}
 		maxContentPerPage := 10
-		maxPage := int(math.Ceil(float64(len(dat.Content.ItemList))/float64(maxContentPerPage)))
 		tmp = getDefaultTemplates()
-		if false {
-		// if contains(dat.CategoryNameList, category) {
-		/*
-			categoryContentMap_ := scanCategoryContents(ctx)
+		pageNumber := 1
+		if contains(dat.Content.CategoryNameList, category) {
 			dat.Title = baseTitle + category
-			dat.CategoryPath = "/category/" + category
-			dat.CategoryName = getCategoryDisplayName(category, categoryList_)
-			dat.Page = 1
-			pageNumber := 1
-			dat.PageList = []int{}
-			categoryItemList := getCategoryContent(categoryContentMap_[category], contentList_)
-			dat.ItemList = getContentRange(pageNumber, maxContentPerPage, len(categoryContentMap_[category]), categoryItemList)
-		*/
+			maxPage := int(math.Ceil(float64(len(dat.Content.CategoryItemMap[category]))/float64(maxContentPerPage)))
+			if len(page) > 0 {
+				pageNumber, _ = strconv.Atoi(page)
+			}
+			if pageNumber > 1 && pageNumber <= maxPage {
+				dat.Title = dat.Title + page
+				dat.Page = pageNumber
+				dat.PageList = getPageList(pageNumber, maxPage)
+				categoryItemList := getCategoryItem(dat.Content.CategoryItemMap[category], dat.Content.ItemList)
+				dat.Content.ItemList = getContentRange(pageNumber, maxContentPerPage, len(dat.Content.CategoryItemMap[category]), categoryItemList)
+			} else {
+				dat.Page = 1
+				dat.PageList = getPageList(1, maxPage)
+				categoryItemList := getCategoryItem(dat.Content.CategoryItemMap[category], dat.Content.ItemList)
+				dat.Content.ItemList = getContentRange(pageNumber, maxContentPerPage, len(dat.Content.CategoryItemMap[category]), categoryItemList)
+			}
+
 		} else {
-			pageNumber := 1
+			maxPage := int(math.Ceil(float64(len(dat.Content.ItemList))/float64(maxContentPerPage)))
 			if len(page) > 0 {
 				pageNumber, _ = strconv.Atoi(page)
 			}
@@ -298,6 +304,7 @@ func GetSitemapDataList(ctx context.Context)([]DynamoData, error) {
 }
 
 func scanContentData(ctx context.Context) ContentData {
+	// Item
 	result, err := GetItemList(ctx)
 	if err != nil {
 		log.Println(err)
@@ -309,6 +316,7 @@ func scanContentData(ctx context.Context) ContentData {
 		json.Unmarshal([]byte(i.Data), &item)
 		itemDataList = append(itemDataList, item)
 	}
+	// Category
 	result, err = GetCategoryList(ctx)
 	if err != nil {
 		log.Println(err)
@@ -322,11 +330,25 @@ func scanContentData(ctx context.Context) ContentData {
 			categoryNameList = append(categoryNameList, i.Data)
 		}
 	}
+	// CategoryItem
+	result, err = GetItemCategoryMap(ctx)
+	if err != nil {
+		log.Println(err)
+		return ContentData{}
+	}
+	itemCategoryMap := make(map[string][]int, len(result))
+	var kvs KVSData
+	var itemIdList []int
+	for _, i := range result {
+		json.Unmarshal([]byte(i.Data), &kvs)
+		json.Unmarshal([]byte(kvs.V), &itemIdList)
+		itemCategoryMap[kvs.K] = itemIdList
+	}
 	return ContentData{
 		Const: ConstData{},
 		ItemList: itemDataList,
 		CategoryNameList: categoryNameList,
-		CategoryItemMap: map[string][]int{},
+		CategoryItemMap: itemCategoryMap,
 	}
 }
 
@@ -370,6 +392,14 @@ func getSitemapTemplates() *template.Template {
 		"safehtml": func(text string) template.HTML { return template.HTML(text) },
 	}
 	return template.Must(template.New("").Funcs(funcMap).ParseFiles("templates/sitemap.xml"))
+}
+
+func getCategoryItem(itemIdList []int, itemList []ItemData) []ItemData {
+	var targetCategoryItemList []ItemData
+	for _, v := range itemIdList {
+		targetCategoryItemList = append(targetCategoryItemList, itemList[v - 1])
+	}
+	return targetCategoryItemList
 }
 
 func init() {
