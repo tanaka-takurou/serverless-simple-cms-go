@@ -248,14 +248,6 @@ func getContentRangeTargetCategory(page int, perPage int, targetItemIdList []int
 	return list
 }
 
-func getCategoryItem(itemIdList []int, itemList []ItemData) []ItemData {
-	var targetCategoryItemList []ItemData
-	for _, v := range itemIdList {
-		targetCategoryItemList = append(targetCategoryItemList, itemList[v - 1])
-	}
-	return targetCategoryItemList
-}
-
 func scan(ctx context.Context, filt expression.ConditionBuilder)(*dynamodb.ScanOutput, error)  {
 	if dynamodbClient == nil {
 		dynamodbClient = dynamodb.New(cfg)
@@ -362,9 +354,7 @@ func scanContentData(ctx context.Context) ContentData {
 		json.Unmarshal([]byte(i.Data), &kvs)
 		json.Unmarshal([]byte(kvs.V), &itemIdList)
 		itemCategoryMap[kvs.K] = itemIdList
-		log.Printf("itemIdList: %+v\n", itemIdList)
 	}
-	log.Printf("itemCategoryMap: %+v\n", itemCategoryMap)
 	return ContentData{
 		Const: ConstData{},
 		ItemList: itemDataList,
