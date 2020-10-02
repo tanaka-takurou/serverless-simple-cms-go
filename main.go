@@ -133,13 +133,13 @@ func HandleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 				dat.Title = dat.Title + page
 				dat.Page = pageNumber
 				dat.PageList = getPageList(pageNumber, maxPage)
-				categoryItemList := getCategoryItem(dat.Content.CategoryItemMap[category], dat.Content.ItemList)
-				dat.Content.ItemList = getContentRange(pageNumber, maxContentPerPage, len(dat.Content.CategoryItemMap[category]), categoryItemList)
+				tmpItemList := getContentRangeTargetCategory(pageNumber, maxContentPerPage, dat.Content.CategoryItemMap[category], dat.Content.ItemList)
+				dat.Content.ItemList = tmpItemList
 			} else {
 				dat.Page = 1
 				dat.PageList = getPageList(1, maxPage)
-				categoryItemList := getCategoryItem(dat.Content.CategoryItemMap[category], dat.Content.ItemList)
-				dat.Content.ItemList = getContentRange(pageNumber, maxContentPerPage, len(dat.Content.CategoryItemMap[category]), categoryItemList)
+				tmpItemList := getContentRangeTargetCategory(pageNumber, maxContentPerPage, dat.Content.CategoryItemMap[category], dat.Content.ItemList)
+				dat.Content.ItemList = tmpItemList
 			}
 
 		} else {
@@ -235,6 +235,25 @@ func getContentRange(page int, perPage int, maxContent int, data []ItemData) []I
 		list = append(list, data[maxContent - i - 1])
 	}
 	return list
+}
+
+func getContentRangeTargetCategory(page int, perPage int, targetItemIdList []int, data []ItemData) []ItemData {
+	var list []ItemData
+	maxContent := len(targetItemIdList)
+	mn := (page - 1) * perPage
+	mx := int(math.Min(float64(page * perPage), float64(maxContent)))
+	for i := mn; i < mx; i++ {
+		list = append(list, data[targetItemIdList[maxContent - i - 1] - 1])
+	}
+	return list
+}
+
+func getCategoryItem(itemIdList []int, itemList []ItemData) []ItemData {
+	var targetCategoryItemList []ItemData
+	for _, v := range itemIdList {
+		targetCategoryItemList = append(targetCategoryItemList, itemList[v - 1])
+	}
+	return targetCategoryItemList
 }
 
 func scan(ctx context.Context, filt expression.ConditionBuilder)(*dynamodb.ScanOutput, error)  {
@@ -337,13 +356,15 @@ func scanContentData(ctx context.Context) ContentData {
 		return ContentData{}
 	}
 	itemCategoryMap := make(map[string][]int, len(result))
-	var kvs KVSData
-	var itemIdList []int
 	for _, i := range result {
+		kvs := KVSData{}
+		itemIdList := []int{}
 		json.Unmarshal([]byte(i.Data), &kvs)
 		json.Unmarshal([]byte(kvs.V), &itemIdList)
 		itemCategoryMap[kvs.K] = itemIdList
+		log.Printf("itemIdList: %+v\n", itemIdList)
 	}
+	log.Printf("itemCategoryMap: %+v\n", itemCategoryMap)
 	return ContentData{
 		Const: ConstData{},
 		ItemList: itemDataList,
@@ -392,14 +413,6 @@ func getSitemapTemplates() *template.Template {
 		"safehtml": func(text string) template.HTML { return template.HTML(text) },
 	}
 	return template.Must(template.New("").Funcs(funcMap).ParseFiles("templates/sitemap.xml"))
-}
-
-func getCategoryItem(itemIdList []int, itemList []ItemData) []ItemData {
-	var targetCategoryItemList []ItemData
-	for _, v := range itemIdList {
-		targetCategoryItemList = append(targetCategoryItemList, itemList[v - 1])
-	}
-	return targetCategoryItemList
 }
 
 func init() {
