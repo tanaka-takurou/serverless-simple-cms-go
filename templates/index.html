@@ -1,11 +1,12 @@
 {{define "base"}}
+{{$url := .URL }}
 <!doctype html>
 <html>
 {{template "headtag" .}}
   <body>
     <div class="ui fixed inverted menu">
       <div class="ui container">
-        <a href="./" class="item">Top</a>
+        <a href="{{ $url }}" class="item">Top</a>
       </div>
     </div>
 {{template "floatingbutton" .}}
