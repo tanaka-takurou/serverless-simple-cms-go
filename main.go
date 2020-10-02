@@ -121,23 +121,29 @@ func HandleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 			category = q["category"]
 		}
 		maxContentPerPage := 10
-		maxPage := int(math.Ceil(float64(len(dat.Content.ItemList))/float64(maxContentPerPage)))
 		tmp = getDefaultTemplates()
-		if false {
-		// if contains(dat.CategoryNameList, category) {
-		/*
-			categoryContentMap_ := scanCategoryContents(ctx)
+		pageNumber := 1
+		if contains(dat.Content.CategoryNameList, category) {
 			dat.Title = baseTitle + category
-			dat.CategoryPath = "/category/" + category
-			dat.CategoryName = getCategoryDisplayName(category, categoryList_)
-			dat.Page = 1
-			pageNumber := 1
-			dat.PageList = []int{}
-			categoryItemList := getCategoryContent(categoryContentMap_[category], contentList_)
-			dat.ItemList = getContentRange(pageNumber, maxContentPerPage, len(categoryContentMap_[category]), categoryItemList)
-		*/
+			maxPage := int(math.Ceil(float64(len(dat.Content.CategoryItemMap[category]))/float64(maxContentPerPage)))
+			if len(page) > 0 {
+				pageNumber, _ = strconv.Atoi(page)
+			}
+			if pageNumber > 1 && pageNumber <= maxPage {
+				dat.Title = dat.Title + page
+				dat.Page = pageNumber
+				dat.PageList = getPageList(pageNumber, maxPage)
+				tmpItemList := getContentRangeTargetCategory(pageNumber, maxContentPerPage, dat.Content.CategoryItemMap[category], dat.Content.ItemList)
+				dat.Content.ItemList = tmpItemList
+			} else {
+				dat.Page = 1
+				dat.PageList = getPageList(1, maxPage)
+				tmpItemList := getContentRangeTargetCategory(pageNumber, maxContentPerPage, dat.Content.CategoryItemMap[category], dat.Content.ItemList)
+				dat.Content.ItemList = tmpItemList
+			}
+
 		} else {
-			pageNumber := 1
+			maxPage := int(math.Ceil(float64(len(dat.Content.ItemList))/float64(maxContentPerPage)))
 			if len(page) > 0 {
 				pageNumber, _ = strconv.Atoi(page)
 			}
@@ -231,6 +237,25 @@ func getContentRange(page int, perPage int, maxContent int, data []ItemData) []I
 	return list
 }
 
+func getContentRangeTargetCategory(page int, perPage int, targetItemIdList []int, data []ItemData) []ItemData {
+	var list []ItemData
+	maxContent := len(targetItemIdList)
+	mn := (page - 1) * perPage
+	mx := int(math.Min(float64(page * perPage), float64(maxContent)))
+	for i := mn; i < mx; i++ {
+		list = append(list, data[targetItemIdList[maxContent - i - 1] - 1])
+	}
+	return list
+}
+
+func getCategoryItem(itemIdList []int, itemList []ItemData) []ItemData {
+	var targetCategoryItemList []ItemData
+	for _, v := range itemIdList {
+		targetCategoryItemList = append(targetCategoryItemList, itemList[v - 1])
+	}
+	return targetCategoryItemList
+}
+
 func scan(ctx context.Context, filt expression.ConditionBuilder)(*dynamodb.ScanOutput, error)  {
 	if dynamodbClient == nil {
 		dynamodbClient = dynamodb.New(cfg)
@@ -298,6 +323,7 @@ func GetSitemapDataList(ctx context.Context)([]DynamoData, error) {
 }
 
 func scanContentData(ctx context.Context) ContentData {
+	// Item
 	result, err := GetItemList(ctx)
 	if err != nil {
 		log.Println(err)
@@ -309,6 +335,7 @@ func scanContentData(ctx context.Context) ContentData {
 		json.Unmarshal([]byte(i.Data), &item)
 		itemDataList = append(itemDataList, item)
 	}
+	// Category
 	result, err = GetCategoryList(ctx)
 	if err != nil {
 		log.Println(err)
@@ -322,11 +349,27 @@ func scanContentData(ctx context.Context) ContentData {
 			categoryNameList = append(categoryNameList, i.Data)
 		}
 	}
+	// CategoryItem
+	result, err = GetItemCategoryMap(ctx)
+	if err != nil {
+		log.Println(err)
+		return ContentData{}
+	}
+	itemCategoryMap := make(map[string][]int, len(result))
+	for _, i := range result {
+		kvs := KVSData{}
+		itemIdList := []int{}
+		json.Unmarshal([]byte(i.Data), &kvs)
+		json.Unmarshal([]byte(kvs.V), &itemIdList)
+		itemCategoryMap[kvs.K] = itemIdList
+		log.Printf("itemIdList: %+v\n", itemIdList)
+	}
+	log.Printf("itemCategoryMap: %+v\n", itemCategoryMap)
 	return ContentData{
 		Const: ConstData{},
 		ItemList: itemDataList,
 		CategoryNameList: categoryNameList,
-		CategoryItemMap: map[string][]int{},
+		CategoryItemMap: itemCategoryMap,
 	}
 }
 
