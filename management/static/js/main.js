@@ -151,6 +151,20 @@ var FixCss = function() {
     $("#info").removeClass("hidden").addClass("visible");
   }, onError);
 }
+var GetDynamodbData = function() {
+  const data = {action: "get_dynamodb_data", token: ""};
+  actionHandle("#get_dynamodb_data", data, (res)=>{
+    $("#loader").removeClass('active');
+    $("#result").text(JSON.stringify(res.data, null, "\t"));
+  }, onError);
+}
+var GetS3Data = function() {
+  const data = {action: "get_s3_data", token: ""};
+  actionHandle("#get_s3_data", data, (res)=>{
+    $("#loader").removeClass('active');
+    $("#result").text(JSON.stringify(res.data, null, "\t"));
+  }, onError);
+}
 var actionHandle = function(element, data, callback, onerror) {
   $(element).addClass('disabled');
   data.token = window.localStorage.getItem("accessToken");

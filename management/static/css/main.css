@@ -685,3 +685,7 @@ h3.ui.center.header {
 .show_cat_button {
   margin-top: 0.5rem !important;
 }
+#info #result {
+  text-align: left !important;
+  overflow-x: scroll;
+}
