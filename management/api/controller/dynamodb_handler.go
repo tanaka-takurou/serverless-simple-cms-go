@@ -685,6 +685,9 @@ func SetCssFileName(ctx context.Context, fileName string) error {
 }
 
 func GetDynamoDBData(ctx context.Context)(interface{}, error) {
+	if dynamodbClient == nil {
+		dynamodbClient = dynamodb.New(cfg)
+	}
 	expr, err := expression.NewBuilder().WithFilter(expression.NotEqual(expression.Name("status"), expression.Value(-1))).Build()
 	if err != nil {
 		return nil, err

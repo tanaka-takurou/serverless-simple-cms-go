@@ -4,11 +4,29 @@
       <h2 class="ui center aligned header">S3 Management</h2>
       <div class="ui stackable very relaxed center aligned grid container">
         <div class="row">
-          <div class="twelve wide column">
-            <span class="ui header">In Development</span>
+          <div class="wide column">
+            <div id="warning" class="ui hidden warning message"></div>
+            <div id="info" class="ui info message">
+              <div id="loader" class="ui inverted dimmer active">
+                <div class="ui large text loader">Loading</div>
+              </div>
+              <div class="header">
+                <b>Data</b>
+              </div>
+              <div class="ui segment">
+                <div class="ui">
+                  <pre id="result"></pre>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <script type="text/javascript">
+  $(document).ready(function() {
+    GetS3Data();
+  });
+  </script>
 {{end}}

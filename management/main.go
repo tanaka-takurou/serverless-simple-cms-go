@@ -37,29 +37,29 @@ func HandleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 	dat.ApiPath = os.Getenv("API_PATH")
 	dat.ProductUrl = os.Getenv("FRONT_URL")
 	if page == "signup" {
-		tmp = getLoginTemplate("templates/login/signup.html", 2)
+		tmp = getTemplate("templates/login/signup.html", 2)
 	} else if page == "activation" {
-		tmp = getLoginTemplate("templates/login/activation.html", 1)
+		tmp = getTemplate("templates/login/activation.html", 1)
 	} else if page == "changepass" {
-		tmp = getLoginTemplate("templates/login/changepass.html", 2)
+		tmp = getTemplate("templates/login/changepass.html", 2)
 	} else if page == "top" {
-		tmp = getLoginTemplate("templates/top.html", 0)
+		tmp = getTemplate("templates/top.html", 0)
 	} else if page == "add" {
-		tmp = getLoginTemplate("templates/add.html", 0)
+		tmp = getTemplate("templates/add.html", 0)
 	} else if page == "fix" {
-		tmp = getLoginTemplate("templates/fix.html", 0)
+		tmp = getTemplate("templates/fix.html", 0)
 	} else if page == "setting" {
-		tmp = getLoginTemplate("templates/setting.html", 0)
+		tmp = getTemplate("templates/setting.html", 0)
 	} else if page == "dynamodb" {
-		tmp = getLoginTemplate("templates/dynamodb.html", 0)
+		tmp = getTemplate("templates/dynamodb.html", 0)
 	} else if page == "s3" {
-		tmp = getLoginTemplate("templates/s3.html", 0)
+		tmp = getTemplate("templates/s3.html", 0)
 	} else if page == "js" {
-		tmp = getLoginTemplate("templates/js.html", 0)
+		tmp = getTemplate("templates/js.html", 0)
 	} else if page == "css" {
-		tmp = getLoginTemplate("templates/css.html", 0)
+		tmp = getTemplate("templates/css.html", 0)
 	} else {
-		tmp = getLoginTemplate("templates/login/login.html", 1)
+		tmp = getTemplate("templates/login/login.html", 1)
 	}
 	if e := tmp.ExecuteTemplate(fw, "base", dat); e != nil {
 		log.Fatal(e)
@@ -75,7 +75,7 @@ func HandleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 	return res, nil
 }
 
-func getLoginTemplate(file string, baseType int) *template.Template {
+func getTemplate(file string, baseType int) *template.Template {
 	templates := template.New("templates")
 	funcMap := template.FuncMap{
 		"safehtml": func(text string) template.HTML { return template.HTML(text) },

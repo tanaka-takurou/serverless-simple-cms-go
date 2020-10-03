@@ -19,7 +19,7 @@ Metadata:
     Labels:
     - ServerlessRepo
     HomePageUrl: https://github.com/tanaka-takurou/serverless-simple-cms-go/
-    SemanticVersion: 0.0.1
+    SemanticVersion: 0.0.2
     SourceCodeUrl: https://github.com/tanaka-takurou/serverless-simple-cms-go/
 Resources:
   FrontPageApi:
@@ -47,7 +47,7 @@ Resources:
   FrontPageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://sam-proto-bucket-2020/155962198c0d4aa6b927f0284fc265fd
+      CodeUri: s3://sam-proto-bucket-2020/b2a8678eafcfa6ab18c75fcafc19b1f3
       Handler: main
       MemorySize: 256
       Runtime: go1.x

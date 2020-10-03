@@ -686,6 +686,10 @@ h3.ui.center.header {
 .show_cat_button {
   margin-top: 0.5rem !important;
 }
+#info #result {
+  text-align: left !important;
+  overflow-x: scroll;
+}
 </style>{{end}}
 {{define "login.css"}}<style type="text/css">
 body {
@@ -861,6 +865,20 @@ var FixCss = function() {
   actionHandle("#fix_css", data, (res)=>{
     $("#fix_css").removeClass('disabled');
     $("#info").removeClass("hidden").addClass("visible");
+  }, onError);
+}
+var GetDynamodbData = function() {
+  const data = {action: "get_dynamodb_data", token: ""};
+  actionHandle("#get_dynamodb_data", data, (res)=>{
+    $("#loader").removeClass('active');
+    $("#result").text(JSON.stringify(res.data, null, "\t"));
+  }, onError);
+}
+var GetS3Data = function() {
+  const data = {action: "get_s3_data", token: ""};
+  actionHandle("#get_s3_data", data, (res)=>{
+    $("#loader").removeClass('active');
+    $("#result").text(JSON.stringify(res.data, null, "\t"));
   }, onError);
 }
 var actionHandle = function(element, data, callback, onerror) {
