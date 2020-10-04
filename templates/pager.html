@@ -3,6 +3,10 @@
 {{ $curr := .Page }}
 {{ $prev := sub .Page 1 }}
 {{ $next := add .Page 1 }}
+{{ $prefix := "/page/" }}
+{{if gt (len .Category) 0}}
+{{ $prefix = (printf "/category/%v/page/" .Category) }}
+{{end}}
     <div class="ui center aligned basic segment">
       <div aria-label="Pagination Navigation" role="navigation" class="ui pagination menu">
 {{ if gt $length 1 }}
@@ -15,7 +19,7 @@
           type="prevItem"
           class="item"
 {{ if gt $curr 1 }}
-           href="/page/{{ $prev }}"
+          href="{{ $prefix }}{{ $prev }}"
 {{ end }}
           >
           ⟨
@@ -41,7 +45,7 @@
 {{ end }}
 {{ if and (ne $curr .) (ne 0 .) }}
           class="item"
-          href="/page/{{ . }}"
+          href="{{ $prefix }}{{ . }}"
 {{ end }}
           >
 {{ if ne 0 . }}
@@ -62,7 +66,7 @@
           type="nextItem"
           class="item"
 {{ if lt $curr $length }}
-          href="/page/{{ $next }}"
+          href="{{ $prefix }}{{ $next }}"
 {{ end }}
           >
           ⟩
