@@ -19,13 +19,14 @@ type UserResponse struct {
 }
 
 type ContentResponse struct {
-	Const            controller.DynamoData   `json:"const"`
+	Const            controller.DynamoData   `json:"constData"`
 	ItemList         []controller.DynamoData `json:"itemList"`
 	CategoryList     []controller.DynamoData `json:"categoryList"`
 	CategoryItemList []controller.DynamoData `json:"categoryItemMap"`
 }
 
 type DataResponse struct {
+	Name string      `json:"name"`
 	Data interface{} `json:"data"`
 }
 
@@ -93,6 +94,18 @@ func HandleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 					imgUrl, _ := controller.UploadImage(ctx, d["filename"], d["filedata"])
 					jsonBytes, _ = json.Marshal(UserResponse{Name: "", Token: "", ImgUrl: imgUrl})
 				}
+			}
+		case "get_const" :
+			_, err = getUser(ctx, d)
+			if err == nil {
+				var constData controller.DynamoData
+				constData, err = controller.GetSingleConst(ctx)
+				jsonBytes, _ = json.Marshal(ContentResponse{
+					Const: constData,
+					ItemList: []controller.DynamoData{},
+					CategoryList: []controller.DynamoData{},
+					CategoryItemList: []controller.DynamoData{},
+				})
 			}
 		case "set_const" :
 			_, err = getUser(ctx, d)
@@ -169,37 +182,39 @@ func HandleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 		case "fix_js" :
 			_, err = getUser(ctx, d)
 			if err == nil {
-				err := checkParameters(d, []string{"jsstring"})
+				err := checkParameters(d, []string{"js_text"})
 				if err == nil {
-					err = controller.FixJS(ctx, d["jsstring"])
+					err = controller.FixJS(ctx, d["js_text"])
 					jsonBytes, _ = json.Marshal(UserResponse{Name: "", Token: "", ImgUrl: ""})
 				}
 			}
 		case "fix_css" :
 			_, err = getUser(ctx, d)
 			if err == nil {
-				err := checkParameters(d, []string{"cssstring"})
+				err := checkParameters(d, []string{"css_text"})
 				if err == nil {
-					err = controller.FixCSS(ctx, d["cssstring"])
+					err = controller.FixCSS(ctx, d["css_text"])
 					jsonBytes, _ = json.Marshal(UserResponse{Name: "", Token: "", ImgUrl: ""})
 				}
 			}
 		case "get_dynamodb_data" :
 			_, err = getUser(ctx, d)
 			if err == nil {
+				name := ""
 				var data interface{}
-				data, err = controller.GetDynamoDBData(ctx)
+				name, data, err = controller.GetDynamoDBData(ctx)
 				if err == nil {
-					jsonBytes, _ = json.Marshal(DataResponse{Data: data})
+					jsonBytes, _ = json.Marshal(DataResponse{Name: name, Data: data})
 				}
 			}
 		case "get_s3_data" :
 			_, err = getUser(ctx, d)
 			if err == nil {
+				name := ""
 				var data interface{}
-				data, err = controller.GetS3Data(ctx)
+				name, data, err = controller.GetS3Data(ctx)
 				if err == nil {
-					jsonBytes, _ = json.Marshal(DataResponse{Data: data})
+					jsonBytes, _ = json.Marshal(DataResponse{Name: name, Data: data})
 				}
 			}
 		}

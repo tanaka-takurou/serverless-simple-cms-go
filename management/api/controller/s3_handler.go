@@ -76,10 +76,10 @@ func UploadFile(ctx context.Context, filedata string, contentType string) error 
 	switch contentType {
 	case "text/css":
 		filename = t.Format(Layout2) + ".css"
-		SetCssFileName(ctx, StaticFilePath + "/" + filename)
+		SetCssFileName(ctx,"https://" + os.Getenv("BUCKET_NAME") + ".s3-" + os.Getenv("REGION") + ".amazonaws.com/" +  StaticFilePath + "/" + filename)
 	case "text/javascript":
 		filename = t.Format(Layout2) + ".js"
-		SetJsFileName(ctx, StaticFilePath + "/" + filename)
+		SetJsFileName(ctx, "https://" + os.Getenv("BUCKET_NAME") + ".s3-" + os.Getenv("REGION") + ".amazonaws.com/" + StaticFilePath + "/" + filename)
 	default:
 		filename = t.Format(Layout2) + ".txt"
 	}
@@ -98,7 +98,7 @@ func UploadFile(ctx context.Context, filedata string, contentType string) error 
 	return nil
 }
 
-func GetS3Data(ctx context.Context)(interface{}, error) {
+func GetS3Data(ctx context.Context)(string, interface{}, error) {
 	if s3Client == nil {
 		s3Client = s3.New(cfg)
 	}
@@ -108,7 +108,7 @@ func GetS3Data(ctx context.Context)(interface{}, error) {
 	req := s3Client.ListObjectsRequest(input)
 	res, err := req.Send(ctx)
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 	var s3Contents []S3ContentData
 	for _, v := range res.ListObjectsOutput.Contents {
@@ -118,5 +118,5 @@ func GetS3Data(ctx context.Context)(interface{}, error) {
 			LastModified: aws.TimeValue(v.LastModified).Format(Layout3),
 		})
 	}
-	return s3Contents, nil
+	return os.Getenv("BUCKET_NAME"), s3Contents, nil
 }
