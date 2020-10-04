@@ -2,6 +2,8 @@ $(document).ready(function() {
   var token = window.localStorage.getItem("accessToken");
   if (!token) {
     location.href = App.url
+  } else {
+    GetUser();
   }
 });
 var OpenModal = function() {
@@ -21,9 +23,19 @@ var ShowCategory3 = function() {
 var ClickMenu = function() {
   $('.ui.sidebar').sidebar('toggle');
 };
+var GetUser = function() {
+  const data = {action: "get_user", token: ""};
+  actionHandle("#get_user", data, (res) => {console.log(res);}, (res) => {
+    location.href = App.url
+  });
+};
+var GetConst = function(callback) {
+  const data = {action: "get_const", token: ""};
+  actionHandle("#get_const", data, callback, onError);
+};
 var SetConst = function() {
   var title = $("#sitetitle").val();
-  var image = $("#headimage").val();
+  var image = $("#img_url").val();
   if (!title) {
     $("#set_const").removeClass('disabled');
     $("#warning").text("No title.").removeClass("hidden").addClass("visible");
@@ -132,20 +144,87 @@ var FixItem = function() {
   }, onError);
 }
 var GetJs = function() {
-  console.log("get_js")
+  GetConst((res)=>{
+    var d = JSON.parse(res.constData.data)
+    if (!!d && !!d.jsFileName && d.jsFileName.length > 0) {
+      getFile(d.jsFileName, "text/javascript", (res_)=>{
+        $("#js_text").val(res_);
+      });
+    } else {
+      var jsText = `$(document).ready(function() {
+  $("#floatingButton")
+    .click(function() {
+      $(document).scrollTop(0);
+    });
+});`
+      $("#js_text").val(jsText);
+    }
+  }, onError);
 }
 var FixJs = function() {
-  const data = {action: "fixjs", token: "", jsstring};
-  actionHandle("#fix_css", data, (res)=>{
-    $("#fix_css").removeClass('disabled');
+  const js_text = $('#js_text').val();
+  const data = {action: "fix_js", token: "", js_text};
+  actionHandle("#fix_js", data, (res)=>{
+    $("#fix_js").removeClass('disabled');
     $("#info").removeClass("hidden").addClass("visible");
   }, onError);
 }
 var GetCss = function() {
-  console.log("get_css")
+  GetConst((res)=>{
+    var d = JSON.parse(res.constData.data)
+    if (!!d && !!d.cssFileName && d.cssFileName.length > 0) {
+      getFile(d.cssFileName, "text/css", (res_)=>{
+        $("#css_text").val(res_);
+      });
+    } else {
+      var cssText = `html {
+  scroll-behavior: smooth;
+}
+#floatingButtonContainer {
+  width: 100%;
+}
+#floatingButton {
+  margin: 0 1em 1em 0 !important;
+}
+h1.ui.center.header {
+  position: relative;
+  margin-top: 40px;
+  padding-top: calc(12vh - 0.5em);
+  z-index: 10;
+}
+.ui.footer.segment {
+  margin: 5em 0em 0em;
+  padding: 5em 0em;
+}
+.ui.container.vmargin {
+  margin: 5rem 0em calc(2rem - 0.14285714em );
+}
+.ui.head_image {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
+.ui.head_image > img {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ui.head_container {
+  width: 100vw;
+  height: 25vh;
+  position: relative;
+}`
+      $("#css_text").val(cssText);
+    }
+  }, onError);
 }
 var FixCss = function() {
-  const data = {action: "fix_css", token: "", cssstring};
+  const css_text = $('#css_text').val();
+  const data = {action: "fix_css", token: "", css_text};
   actionHandle("#fix_css", data, (res)=>{
     $("#fix_css").removeClass('disabled');
     $("#info").removeClass("hidden").addClass("visible");
@@ -155,14 +234,16 @@ var GetDynamodbData = function() {
   const data = {action: "get_dynamodb_data", token: ""};
   actionHandle("#get_dynamodb_data", data, (res)=>{
     $("#loader").removeClass('active');
-    $("#result").text(JSON.stringify(res.data, null, "\t"));
+    $("#result_name").text("Table Name: " + res.name);
+    $("#result_data").text(JSON.stringify(res.data, null, "\t"));
   }, onError);
 }
 var GetS3Data = function() {
   const data = {action: "get_s3_data", token: ""};
   actionHandle("#get_s3_data", data, (res)=>{
     $("#loader").removeClass('active');
-    $("#result").text(JSON.stringify(res.data, null, "\t"));
+    $("#result_name").text("Bucket Name: " + res.name);
+    $("#result_data").text(JSON.stringify(res.data, null, "\t"));
   }, onError);
 }
 var actionHandle = function(element, data, callback, onerror) {
@@ -257,7 +338,21 @@ function putImage() {
     CloseModal();
   });
 }
-function ChangeImage () {
+function getFile(url, contentType, callback) {
+  $.ajax({
+    type:          'GET',
+    contentType:   contentType,
+    scriptCharset: 'utf-8',
+    url:           url
+  })
+  .done(function(res) {
+    callback(res);
+  })
+  .fail(function(e) {
+    console.log(e);
+  });
+}
+var ChangeImage = function() {
   const file = $('#image').prop('files')[0];
   toBase64(file).then(onConverted());
 }

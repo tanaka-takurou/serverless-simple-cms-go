@@ -685,7 +685,12 @@ h3.ui.center.header {
 .show_cat_button {
   margin-top: 0.5rem !important;
 }
-#info #result {
+#info #result_name,
+#info #result_data {
   text-align: left !important;
   overflow-x: scroll;
+}
+#preview {
+  max-width: 90vw;
+  max-height: 90vh;
 }

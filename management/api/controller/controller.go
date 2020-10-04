@@ -25,7 +25,7 @@ type SitemapData struct {
 }
 
 type ContentData struct {
-	Const              ConstData        `json:"const"`
+	Const              ConstData        `json:"constData"`
 	ItemList           []ItemData       `json:"itemList"`
 	CategoryNameList   []string         `json:"categoryNameList"`
 	CategoryItemMap    map[string][]int `json:"categoryItemMap"`

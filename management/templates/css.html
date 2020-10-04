@@ -2,13 +2,20 @@
   <div>
     <div>
       <h2 class="ui center aligned header">CSS Management</h2>
-      <div class="ui stackable very relaxed center aligned grid container">
-        <div class="row">
-          <div class="twelve wide column">
-            <span class="ui header">In Development</span>
+      <form id="formContent" class="ui form">
+        <div class="field">
+          <label>Edit CSS</label>
+          <div class="ui input">
+            <textarea id="css_text" name="css_text" rows="10"></textarea>
           </div>
         </div>
-      </div>
+        <div id="fix_css" class="ui teal submit button" onclick="FixCss();">OK</div>
+      </form>
     </div>
   </div>
+  <script type="text/javascript">
+  $(document).ready(function() {
+    GetCss();
+  });
+  </script>
 {{end}}

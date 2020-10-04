@@ -31,6 +31,7 @@ type PageData struct {
 	SitemapList    []SitemapData `json:"sitemapList"`
 	SitemapHeadTag string        `json:"sitemapHeadTag"`
 	URL            string        `json:"url"`
+	Category       string        `json:"category"`
 }
 
 type ItemData struct {
@@ -48,7 +49,7 @@ type SitemapData struct {
 }
 
 type ContentData struct {
-	Const              ConstData        `json:"const"`
+	Const              ConstData        `json:"constData"`
 	ItemList           []ItemData       `json:"itemList"`
 	CategoryNameList   []string         `json:"categoryNameList"`
 	CategoryItemMap    map[string][]int `json:"categoryItemMap"`
@@ -120,7 +121,7 @@ func HandleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 		tmp = getDefaultTemplates()
 		pageNumber := 1
 		if contains(dat.Content.CategoryNameList, category) {
-			dat.Title = baseTitle + " " + category
+			baseTitle = baseTitle + " " + category
 			maxPage := int(math.Ceil(float64(len(dat.Content.CategoryItemMap[category]))/float64(maxContentPerPage)))
 			if len(page) > 0 {
 				pageNumber, _ = strconv.Atoi(page)
@@ -319,53 +320,39 @@ func GetSitemapDataList(ctx context.Context)([]DynamoData, error) {
 }
 
 func scanContentData(ctx context.Context) ContentData {
-	// Const
-	rawConstData, err := GetConst(ctx)
+	result, err := scan(ctx, expression.NotEqual(expression.Name("status"), expression.Value(-1)))
 	if err != nil {
 		log.Println(err)
 		return ContentData{}
 	}
 	constData := ConstData{}
-	json.Unmarshal([]byte(rawConstData.Data), &constData)
-	// Item
-	result, err := GetItemList(ctx)
-	if err != nil {
-		log.Println(err)
-		return ContentData{}
-	}
-	var itemDataList []ItemData
-	for _, i := range result {
-		item := ItemData{}
-		json.Unmarshal([]byte(i.Data), &item)
-		itemDataList = append(itemDataList, item)
-	}
-	// Category
-	result, err = GetCategoryList(ctx)
-	if err != nil {
-		log.Println(err)
-		return ContentData{}
-	}
-	var categoryNameList []string
-	for _, i := range result {
-		if len(i.Data) < 1 {
-			log.Println("Error Category Name is nil")
+	itemDataList := []ItemData{}
+	categoryNameList := []string{}
+	itemCategoryMap := make(map[string][]int)
+	for _, v := range result.Items {
+		dynamoData := DynamoData{}
+		err = dynamodbattribute.UnmarshalMap(v, &dynamoData)
+		if err != nil {
+			log.Println(err)
 		} else {
-			categoryNameList = append(categoryNameList, i.Data)
+			switch {
+			case dynamoData.Type == DataTypeConst:
+				json.Unmarshal([]byte(dynamoData.Data), &constData)
+			case dynamoData.Type == DataTypeItem:
+				item := ItemData{}
+				json.Unmarshal([]byte(dynamoData.Data), &item)
+				itemDataList = append(itemDataList, item)
+			case dynamoData.Type == DataTypeCategory:
+				categoryNameList = append(categoryNameList, dynamoData.Data)
+			case dynamoData.Type == DataTypeItemCategory:
+				kvs := KVSData{}
+				itemIdList := []int{}
+				json.Unmarshal([]byte(dynamoData.Data), &kvs)
+				json.Unmarshal([]byte(kvs.V), &itemIdList)
+				itemCategoryMap[kvs.K] = itemIdList
+			default:
+			}
 		}
-	}
-	// CategoryItem
-	result, err = GetItemCategoryMap(ctx)
-	if err != nil {
-		log.Println(err)
-		return ContentData{}
-	}
-	itemCategoryMap := make(map[string][]int, len(result))
-	for _, i := range result {
-		kvs := KVSData{}
-		itemIdList := []int{}
-		json.Unmarshal([]byte(i.Data), &kvs)
-		json.Unmarshal([]byte(kvs.V), &itemIdList)
-		itemCategoryMap[kvs.K] = itemIdList
 	}
 	return ContentData{
 		Const: constData,
@@ -431,6 +418,7 @@ func getPageDataTargetCategory(dat PageData, title string, pageNumber int, maxPa
 	dat.PageList = getPageList(pageNumber, maxPage)
 	tmpItemList := getContentRangeTargetCategory(pageNumber, maxContentPerPage, dat.Content.CategoryItemMap[category], dat.Content.ItemList)
 	dat.Content.ItemList = tmpItemList
+	dat.Category = category
 	return dat
 }
 

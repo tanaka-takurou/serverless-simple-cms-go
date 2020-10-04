@@ -19,13 +19,24 @@ Metadata:
     Labels:
     - ServerlessRepo
     HomePageUrl: https://github.com/tanaka-takurou/serverless-simple-cms-go/
-    SemanticVersion: 0.0.2
+    SemanticVersion: 0.1.0
     SourceCodeUrl: https://github.com/tanaka-takurou/serverless-simple-cms-go/
 Resources:
   FrontPageApi:
     Type: AWS::Serverless::HttpApi
   ImgBucket:
     Type: AWS::S3::Bucket
+    Properties:
+      CorsConfiguration:
+        CorsRules:
+        - AllowedHeaders:
+          - '*'
+          AllowedMethods:
+          - GET
+          AllowedOrigins:
+          - '*'
+          Id: CORSRuleId
+          MaxAge: '3600'
   ItemTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -47,7 +58,7 @@ Resources:
   FrontPageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://sam-proto-bucket-2020/b2a8678eafcfa6ab18c75fcafc19b1f3
+      CodeUri: s3://sam-proto-bucket-2020/1afbf91215817879226c88693b7ea485
       Handler: main
       MemorySize: 256
       Runtime: go1.x
@@ -116,7 +127,7 @@ Resources:
   ManagementPageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://sam-proto-bucket-2020/329ec4a7e403fa98a47cf424dc9ca462
+      CodeUri: s3://sam-proto-bucket-2020/8ce8d8b9ed741afa86b1a5517b375f94
       Handler: main
       MemorySize: 256
       Runtime: go1.x
@@ -165,7 +176,7 @@ Resources:
   ManagementMainFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://sam-proto-bucket-2020/aa627e8893b436965f52ab1588be5459
+      CodeUri: s3://sam-proto-bucket-2020/b5f3861e3476c1d61fa7a7dff1a4629e
       Handler: main
       MemorySize: 256
       Runtime: go1.x

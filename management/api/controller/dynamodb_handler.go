@@ -684,13 +684,13 @@ func SetCssFileName(ctx context.Context, fileName string) error {
 	return err
 }
 
-func GetDynamoDBData(ctx context.Context)(interface{}, error) {
+func GetDynamoDBData(ctx context.Context)(string, interface{}, error) {
 	if dynamodbClient == nil {
 		dynamodbClient = dynamodb.New(cfg)
 	}
 	expr, err := expression.NewBuilder().WithFilter(expression.NotEqual(expression.Name("status"), expression.Value(-1))).Build()
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 	params := &dynamodb.ScanInput{
 		ExpressionAttributeNames:  expr.Names(),
@@ -701,7 +701,7 @@ func GetDynamoDBData(ctx context.Context)(interface{}, error) {
 	}
 	result, err := dynamodbClient.ScanRequest(params).Send(ctx)
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 	var tableContents []interface{}
 	for _, i := range result.ScanOutput.Items {
@@ -713,5 +713,5 @@ func GetDynamoDBData(ctx context.Context)(interface{}, error) {
 			tableContents = append(tableContents, item)
 		}
 	}
-	return tableContents, nil
+	return os.Getenv("ITEM_TABLE_NAME"), tableContents, nil
 }

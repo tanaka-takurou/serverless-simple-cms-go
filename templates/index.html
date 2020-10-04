@@ -10,7 +10,10 @@
       </div>
     </div>
 {{template "floatingbutton" .}}
-    <h1 class="ui center aligned header">{{ .Title }}</h1>
+    <div class="ui head_container">
+      <h1 class="ui center aligned header">{{ .Content.Const.Title }}</h1>
+{{if gt (len .Content.Const.HeadImage) 0}}<div class="ui head_image"><img src="{{ .Content.Const.HeadImage }}"></div>{{end}}
+    </div>
 {{template "content" .}}
 {{template "pagertag" .}}
 {{template "foottag" .}}

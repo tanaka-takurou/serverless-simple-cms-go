@@ -20,7 +20,7 @@ Metadata:
     ReadmeUrl: README.md
     Labels: ['ServerlessRepo']
     HomePageUrl: https://github.com/tanaka-takurou/serverless-simple-cms-go/
-    SemanticVersion: 0.0.3
+    SemanticVersion: 0.1.0
     SourceCodeUrl: https://github.com/tanaka-takurou/serverless-simple-cms-go/
 
 Resources:
@@ -28,6 +28,14 @@ Resources:
     Type: AWS::Serverless::HttpApi
   ImgBucket:
     Type: AWS::S3::Bucket
+    Properties:
+      CorsConfiguration:
+        CorsRules:
+        - AllowedHeaders: ['*']
+          AllowedMethods: [GET]
+          AllowedOrigins: ['*']
+          Id: CORSRuleId
+          MaxAge: '3600'
   ItemTable:
     Type: AWS::DynamoDB::Table
     Properties:
