@@ -22,7 +22,8 @@ func scan(ctx context.Context, filt expression.ConditionBuilder)(*dynamodb.ScanO
 	if dynamodbClient == nil {
 		dynamodbClient = dynamodb.New(cfg)
 	}
-	expr, err := expression.NewBuilder().WithFilter(filt).Build()
+	proj := expression.NamesList(expression.Name("id"), expression.Name("data"), expression.Name("item_type"), expression.Name("status"), expression.Name("created"))
+	expr, err := expression.NewBuilder().WithFilter(filt).WithProjection(proj).Build()
 	if err != nil {
 		return nil, err
 	}
@@ -685,26 +686,13 @@ func SetCssFileName(ctx context.Context, fileName string) error {
 }
 
 func GetDynamoDBData(ctx context.Context)(string, interface{}, error) {
-	if dynamodbClient == nil {
-		dynamodbClient = dynamodb.New(cfg)
-	}
-	expr, err := expression.NewBuilder().WithFilter(expression.NotEqual(expression.Name("status"), expression.Value(-1))).Build()
+	result, err := scan(ctx, expression.NotEqual(expression.Name("status"), expression.Value(-1)))
 	if err != nil {
-		return "", nil, err
-	}
-	params := &dynamodb.ScanInput{
-		ExpressionAttributeNames:  expr.Names(),
-		ExpressionAttributeValues: expr.Values(),
-		FilterExpression:          expr.Filter(),
-		ProjectionExpression:      expr.Projection(),
-		TableName:                 aws.String(os.Getenv("ITEM_TABLE_NAME")),
-	}
-	result, err := dynamodbClient.ScanRequest(params).Send(ctx)
-	if err != nil {
+		log.Println(err)
 		return "", nil, err
 	}
 	var tableContents []interface{}
-	for _, i := range result.ScanOutput.Items {
+	for _, i := range result.Items {
 		var item interface{}
 		err := dynamodbattribute.UnmarshalMap(i, &item)
 		if err != nil {
