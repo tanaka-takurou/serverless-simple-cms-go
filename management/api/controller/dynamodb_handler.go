@@ -22,7 +22,8 @@ func scan(ctx context.Context, filt expression.ConditionBuilder)(*dynamodb.ScanO
 	if dynamodbClient == nil {
 		dynamodbClient = dynamodb.New(cfg)
 	}
-	expr, err := expression.NewBuilder().WithFilter(filt).Build()
+	proj := expression.NamesList(expression.Name("id"), expression.Name("data"), expression.Name("item_type"), expression.Name("status"), expression.Name("created"))
+	expr, err := expression.NewBuilder().WithFilter(filt).WithProjection(proj).Build()
 	if err != nil {
 		return nil, err
 	}

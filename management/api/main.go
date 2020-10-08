@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"./controller"
+	"github.com/tanaka-takurou/serverless-simple-cms-go/management/api/controller"
 )
 
 type UserResponse struct {
