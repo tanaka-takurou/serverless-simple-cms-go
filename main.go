@@ -17,10 +17,10 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/aws/external"
+	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb/expression"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb/dynamodbattribute"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 )
 
 type PageData struct {
@@ -63,11 +63,11 @@ type ConstData struct {
 }
 
 type DynamoData struct {
-	Id      int    `json:"id"`
-	Data    string `json:"data"`
-	Type    int    `json:"item_type"`
-	Status  int    `json:"status"`
-	Created string `json:"created"`
+	Id      int    `dynamodbav:"id"`
+	Data    string `dynamodbav:"data"`
+	Type    int    `dynamodbav:"item_type"`
+	Status  int    `dynamodbav:"status"`
+	Created string `dynamodbav:"created"`
 }
 
 type KVSData struct {
@@ -90,6 +90,7 @@ const (
 )
 
 func HandleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (Response, error) {
+	initConfig(ctx)
 	baseTitle := "Example Site "
 	tmp := template.New("tmp")
 	contentType := "text/html"
@@ -234,7 +235,7 @@ func getContentRangeTargetCategory(page int, perPage int, targetItemIdList []int
 
 func scan(ctx context.Context, filt expression.ConditionBuilder)(*dynamodb.ScanOutput, error)  {
 	if dynamodbClient == nil {
-		dynamodbClient = dynamodb.New(cfg)
+		dynamodbClient = dynamodb.NewFromConfig(cfg)
 	}
 	proj := expression.NamesList(expression.Name("id"), expression.Name("data"), expression.Name("item_type"), expression.Name("status"), expression.Name("created"))
 	expr, err := expression.NewBuilder().WithFilter(filt).WithProjection(proj).Build()
@@ -248,9 +249,7 @@ func scan(ctx context.Context, filt expression.ConditionBuilder)(*dynamodb.ScanO
 		ProjectionExpression:      expr.Projection(),
 		TableName:                 aws.String(os.Getenv("TABLE_NAME")),
 	}
-	req := dynamodbClient.ScanRequest(input)
-	res, err := req.Send(ctx)
-	return res.ScanOutput, err
+	return dynamodbClient.Scan(ctx, input)
 }
 
 func GetDynamoDataCount(ctx context.Context, dataType int)(int, error)  {
@@ -272,7 +271,7 @@ func GetConst(ctx context.Context)(DynamoData, error) {
 	}
 	if len(result.Items) > 0 {
 		item := DynamoData{}
-		err = dynamodbattribute.UnmarshalMap(result.Items[0], &item)
+		err = attributevalue.UnmarshalMap(result.Items[0], &item)
 		if err != nil {
 			return dynamoData, err
 		} else {
@@ -293,7 +292,7 @@ func GetDynamoDataList(ctx context.Context, dataType int)([]DynamoData, error) {
 	}
 	for _, i := range result.Items {
 		item := DynamoData{}
-		err = dynamodbattribute.UnmarshalMap(i, &item)
+		err = attributevalue.UnmarshalMap(i, &item)
 		if err != nil {
 			log.Println(err)
 		} else {
@@ -332,7 +331,7 @@ func scanContentData(ctx context.Context) ContentData {
 	itemCategoryMap := make(map[string][]int)
 	for _, v := range result.Items {
 		dynamoData := DynamoData{}
-		err = dynamodbattribute.UnmarshalMap(v, &dynamoData)
+		err = attributevalue.UnmarshalMap(v, &dynamoData)
 		if err != nil {
 			log.Println(err)
 		} else {
@@ -423,10 +422,9 @@ func getPageDataTargetCategory(dat PageData, title string, pageNumber int, maxPa
 	return dat
 }
 
-func init() {
+func initConfig(ctx context.Context) {
 	var err error
-	cfg, err = external.LoadDefaultAWSConfig()
-	cfg.Region = os.Getenv("REGION")
+	cfg, err = config.LoadDefaultConfig(ctx, config.WithRegion(os.Getenv("REGION")))
 	if err != nil {
 		log.Print(err)
 	}
