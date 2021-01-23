@@ -5,17 +5,18 @@ import (
 	"context"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
+	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider/types"
 )
 
 var cognitoClient *cognitoidentityprovider.Client
 
 func Login(ctx context.Context, name string, pass string)(string, error) {
 	if cognitoClient == nil {
-		cognitoClient = cognitoidentityprovider.New(cfg)
+		cognitoClient = cognitoidentityprovider.NewFromConfig(cfg)
 	}
 
 	input := &cognitoidentityprovider.InitiateAuthInput{
-		AuthFlow: cognitoidentityprovider.AuthFlowTypeUserPasswordAuth,
+		AuthFlow: types.AuthFlowTypeUserPasswordAuth,
 		AuthParameters: map[string]string{
 			"USERNAME": name,
 			"PASSWORD": pass,
@@ -23,34 +24,32 @@ func Login(ctx context.Context, name string, pass string)(string, error) {
 		ClientId: aws.String(os.Getenv("CLIENT_ID")),
 	}
 
-	req := cognitoClient.InitiateAuthRequest(input)
-	res, err := req.Send(ctx)
+	res, err := cognitoClient.InitiateAuth(ctx, input)
 	if err != nil {
 		return "", err
 	}
-	return aws.StringValue(res.InitiateAuthOutput.AuthenticationResult.AccessToken), nil
+	return aws.ToString(res.AuthenticationResult.AccessToken), nil
 }
 
 func GetUser(ctx context.Context, token string)(string, error) {
 	if cognitoClient == nil {
-		cognitoClient = cognitoidentityprovider.New(cfg)
+		cognitoClient = cognitoidentityprovider.NewFromConfig(cfg)
 	}
 
 	input := &cognitoidentityprovider.GetUserInput{
 		AccessToken: aws.String(token),
 	}
 
-	req := cognitoClient.GetUserRequest(input)
-	res, err := req.Send(ctx)
+	res, err := cognitoClient.GetUser(ctx, input)
 	if err != nil {
 		return "", err
 	}
-	return aws.StringValue(res.GetUserOutput.Username), nil
+	return aws.ToString(res.Username), nil
 }
 
 func ChangePass(ctx context.Context, token string, pass string, newPass string) error {
 	if cognitoClient == nil {
-		cognitoClient = cognitoidentityprovider.New(cfg)
+		cognitoClient = cognitoidentityprovider.NewFromConfig(cfg)
 	}
 
 	input := &cognitoidentityprovider.ChangePasswordInput{
@@ -59,31 +58,29 @@ func ChangePass(ctx context.Context, token string, pass string, newPass string) 
 		ProposedPassword: aws.String(newPass),
 	}
 
-	req := cognitoClient.ChangePasswordRequest(input)
-	_, err := req.Send(ctx)
+	_, err := cognitoClient.ChangePassword(ctx, input)
 	return err
 }
 
 func Logout(ctx context.Context, token string) error {
 	if cognitoClient == nil {
-		cognitoClient = cognitoidentityprovider.New(cfg)
+		cognitoClient = cognitoidentityprovider.NewFromConfig(cfg)
 	}
 
 	input := &cognitoidentityprovider.GlobalSignOutInput{
 		AccessToken: aws.String(token),
 	}
 
-	req := cognitoClient.GlobalSignOutRequest(input)
-	_, err := req.Send(ctx)
+	_, err := cognitoClient.GlobalSignOut(ctx, input)
 	return err
 }
 
 func Signup(ctx context.Context, name string, pass string, mail string) error {
 	if cognitoClient == nil {
-		cognitoClient = cognitoidentityprovider.New(cfg)
+		cognitoClient = cognitoidentityprovider.NewFromConfig(cfg)
 	}
 
-	ua := &cognitoidentityprovider.AttributeType {
+	ua := &types.AttributeType {
 		Name: aws.String("email"),
 		Value: aws.String(mail),
 	}
@@ -91,19 +88,18 @@ func Signup(ctx context.Context, name string, pass string, mail string) error {
 		Username: aws.String(name),
 		Password: aws.String(pass),
 		ClientId: aws.String(os.Getenv("CLIENT_ID")),
-		UserAttributes: []cognitoidentityprovider.AttributeType{
+		UserAttributes: []types.AttributeType{
 			*ua,
 		},
 	}
 
-	req := cognitoClient.SignUpRequest(input)
-	_, err := req.Send(ctx)
+	_, err := cognitoClient.SignUp(ctx, input)
 	return err
 }
 
 func ConfirmSignup(ctx context.Context, name string, confirmationCode string) error {
 	if cognitoClient == nil {
-		cognitoClient = cognitoidentityprovider.New(cfg)
+		cognitoClient = cognitoidentityprovider.NewFromConfig(cfg)
 	}
 
 	input := &cognitoidentityprovider.ConfirmSignUpInput{
@@ -112,7 +108,6 @@ func ConfirmSignup(ctx context.Context, name string, confirmationCode string) er
 		ClientId: aws.String(os.Getenv("CLIENT_ID")),
 	}
 
-	req := cognitoClient.ConfirmSignUpRequest(input)
-	_, err := req.Send(ctx)
+	_, err := cognitoClient.ConfirmSignUp(ctx, input)
 	return err
 }

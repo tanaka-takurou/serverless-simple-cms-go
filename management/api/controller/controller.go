@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"encoding/json"
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/aws/external"
+	"github.com/aws/aws-sdk-go-v2/config"
 )
 
 type ItemData struct {
@@ -40,11 +40,11 @@ type ConstData struct {
 }
 
 type DynamoData struct {
-	Id      int    `json:"id"`
-	Data    string `json:"data"`
-	Type    int    `json:"item_type"`
-	Status  int    `json:"status"`
-	Created string `json:"created"`
+	Id      int    `dynamodbav:"id"`
+	Data    string `dynamodbav:"data"`
+	Type    int    `dynamodbav:"item_type"`
+	Status  int    `dynamodbav:"status"`
+	Created string `dynamodbav:"created"`
 }
 
 type KVSData struct {
@@ -82,10 +82,9 @@ func FixCSS(ctx context.Context, filedata string) error {
 	return UploadFile(ctx, filedata, "text/css")
 }
 
-func init() {
+func InitConfig(ctx context.Context) {
 	var err error
-	cfg, err = external.LoadDefaultAWSConfig()
-	cfg.Region = os.Getenv("REGION")
+	cfg, err = config.LoadDefaultConfig(ctx, config.WithRegion(os.Getenv("REGION")))
 	if err != nil {
 		log.Print(err)
 	}

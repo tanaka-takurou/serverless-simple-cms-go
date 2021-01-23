@@ -7,12 +7,12 @@ import (
 	"time"
 	"sort"
 	"context"
-	"strconv"
 	"encoding/json"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb/expression"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb/dynamodbattribute"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 )
 
 var dynamodbClient *dynamodb.Client
@@ -20,7 +20,7 @@ const LastmodLayout string = "2006-01-02"
 
 func scan(ctx context.Context, filt expression.ConditionBuilder)(*dynamodb.ScanOutput, error)  {
 	if dynamodbClient == nil {
-		dynamodbClient = dynamodb.New(cfg)
+		dynamodbClient = dynamodb.NewFromConfig(cfg)
 	}
 	proj := expression.NamesList(expression.Name("id"), expression.Name("data"), expression.Name("item_type"), expression.Name("status"), expression.Name("created"))
 	expr, err := expression.NewBuilder().WithFilter(filt).WithProjection(proj).Build()
@@ -34,39 +34,36 @@ func scan(ctx context.Context, filt expression.ConditionBuilder)(*dynamodb.ScanO
 		ProjectionExpression:      expr.Projection(),
 		TableName:                 aws.String(os.Getenv("ITEM_TABLE_NAME")),
 	}
-	req := dynamodbClient.ScanRequest(input)
-	res, err := req.Send(ctx)
-	return res.ScanOutput, err
+	res, err := dynamodbClient.Scan(ctx, input)
+	return res, err
 }
 
-func put(ctx context.Context, av map[string]dynamodb.AttributeValue) error {
+func put(ctx context.Context, av map[string]types.AttributeValue) error {
 	if dynamodbClient == nil {
-		dynamodbClient = dynamodb.New(cfg)
+		dynamodbClient = dynamodb.NewFromConfig(cfg)
 	}
 	input := &dynamodb.PutItemInput{
 		Item:      av,
 		TableName: aws.String(os.Getenv("ITEM_TABLE_NAME")),
 	}
-	req := dynamodbClient.PutItemRequest(input)
-	_, err := req.Send(ctx)
+	_, err := dynamodbClient.PutItem(ctx, input)
 	return err
 }
 
-func update(ctx context.Context, an map[string]string, av map[string]dynamodb.AttributeValue, key map[string]dynamodb.AttributeValue, updateExpression string) error {
+func update(ctx context.Context, an map[string]string, av map[string]types.AttributeValue, key map[string]types.AttributeValue, updateExpression string) error {
 	if dynamodbClient == nil {
-		dynamodbClient = dynamodb.New(cfg)
+		dynamodbClient = dynamodb.NewFromConfig(cfg)
 	}
 	input := &dynamodb.UpdateItemInput{
 		ExpressionAttributeNames: an,
 		ExpressionAttributeValues: av,
 		TableName: aws.String(os.Getenv("ITEM_TABLE_NAME")),
 		Key: key,
-		ReturnValues:     dynamodb.ReturnValueUpdatedNew,
+		ReturnValues:     types.ReturnValueUpdatedNew,
 		UpdateExpression: aws.String(updateExpression),
 	}
 
-	req := dynamodbClient.UpdateItemRequest(input)
-	_, err := req.Send(ctx)
+	_, err := dynamodbClient.UpdateItem(ctx, input)
 	return err
 }
 
@@ -93,7 +90,7 @@ func SetConst(ctx context.Context, title string, headImage string, jsFileName st
 		Status: 0,
 		Created: t.Format(Layout),
 	}
-	av, err := dynamodbattribute.MarshalMap(item)
+	av, err := attributevalue.MarshalMap(item)
 	if err != nil {
 		return err
 	}
@@ -153,7 +150,7 @@ func putItemData(ctx context.Context, itemId int, data ItemData) error {
 		Status: 0,
 		Created: t.Format(Layout),
 	}
-	av, err := dynamodbattribute.MarshalMap(item)
+	av, err := attributevalue.MarshalMap(item)
 	if err != nil {
 		return err
 	}
@@ -188,7 +185,7 @@ func putCategoryData(ctx context.Context, itemId int, data string) error {
 		Status: 0,
 		Created: t.Format(Layout),
 	}
-	av, err := dynamodbattribute.MarshalMap(item)
+	av, err := attributevalue.MarshalMap(item)
 	if err != nil {
 		return err
 	}
@@ -227,7 +224,7 @@ func putCategoryItemData(ctx context.Context, itemId int, data KVSData) error {
 		Status: 0,
 		Created: t.Format(Layout),
 	}
-	av, err := dynamodbattribute.MarshalMap(item)
+	av, err := attributevalue.MarshalMap(item)
 	if err != nil {
 		return err
 	}
@@ -266,7 +263,7 @@ func putSitemapData(ctx context.Context, itemId int, data SitemapData) error {
 		Status: 0,
 		Created: t.Format(Layout),
 	}
-	av, err := dynamodbattribute.MarshalMap(item)
+	av, err := attributevalue.MarshalMap(item)
 	if err != nil {
 		return err
 	}
@@ -303,7 +300,7 @@ func GetDynamoDataList(ctx context.Context, dataType int)([]DynamoData, error) {
 	}
 	for _, i := range result.Items {
 		item := DynamoData{}
-		err = dynamodbattribute.UnmarshalMap(i, &item)
+		err = attributevalue.UnmarshalMap(i, &item)
 		if err != nil {
 			log.Println(err)
 		} else {
@@ -341,7 +338,7 @@ func GetSingleDynamoData(ctx context.Context, dataType int, itemId int)(DynamoDa
 	}
 	if len(result.Items) > 0 {
 		item := DynamoData{}
-		err = dynamodbattribute.UnmarshalMap(result.Items[0], &item)
+		err = attributevalue.UnmarshalMap(result.Items[0], &item)
 		if err != nil {
 			log.Println(err)
 		} else {
@@ -375,18 +372,21 @@ func UpdateDynamoData(ctx context.Context, dataType int, itemId int, data string
 	an := map[string]string{
 		"#d": "data",
 	}
-	av := map[string]dynamodb.AttributeValue{
-		":new_d": {
-			S: aws.String(data),
-		},
+	item := struct {NewData string `dynamodbav:":new_d"`}{data}
+	av, err := attributevalue.MarshalMap(item)
+	if err != nil {
+		return err
 	}
-	key := map[string]dynamodb.AttributeValue{
-		"id": {
-			N: aws.String(strconv.Itoa(itemId)),
-		},
-		"item_type": {
-			N: aws.String(strconv.Itoa(dataType)),
-		},
+	item_ := struct {
+		Id       int `dynamodbav:"id"`
+		ItemType int `dynamodbav:"item_type"`
+	}{
+		Id: itemId,
+		ItemType: dataType,
+	}
+	key, err := attributevalue.MarshalMap(item_)
+	if err != nil {
+		return err
 	}
 	updateExpression := "set #d = :new_d"
 	return update(ctx, an, av, key, updateExpression)
@@ -694,7 +694,7 @@ func GetDynamoDBData(ctx context.Context)(string, interface{}, error) {
 	var tableContents []interface{}
 	for _, i := range result.Items {
 		var item interface{}
-		err := dynamodbattribute.UnmarshalMap(i, &item)
+		err := attributevalue.UnmarshalMap(i, &item)
 		if err != nil {
 			log.Print(err)
 		} else {

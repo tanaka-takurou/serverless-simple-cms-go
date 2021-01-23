@@ -37,6 +37,7 @@ type ErrorResponse struct {
 type Response events.APIGatewayProxyResponse
 
 func HandleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (Response, error) {
+	controller.InitConfig(ctx)
 	var jsonBytes []byte
 	var err error
 	d := make(map[string]string)
