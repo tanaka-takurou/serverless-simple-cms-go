@@ -62,10 +62,9 @@ var SetSample = function() {
 var GetItemCategoryList = function() {
   const data = {action: "get_item_category_list", token: ""};
   actionHandle("#get_item_category_list", data, (res)=>{
-    $("#info").removeClass("hidden").addClass("visible");
     App.itemList = res.itemList;
     res.itemList.forEach( function(item) {
-      var d = JSON.parse(item.data)
+      var d = JSON.parse(item.Data)
       var optionTag = $("<option>" + d.title + "</option>", {
         "value": d.id
       });
@@ -74,7 +73,7 @@ var GetItemCategoryList = function() {
     App.categoryList = res.categoryList;
     res.categoryList.forEach( function(item) {
       var optionTag = $("<option>", {
-        "value": item.data
+        "value": item.Data
       });
       $("#category").append(optionTag);
     });
@@ -83,11 +82,10 @@ var GetItemCategoryList = function() {
 var GetCategoryList = function() {
   const data = {action: "get_category_list", token: ""};
   actionHandle("#get_category_list", data, (res)=>{
-    $("#info").removeClass("hidden").addClass("visible");
     App.categoryList = res.categoryList;
     res.categoryList.forEach( function(item) {
       var optionTag = $("<option>", {
-        "value": item.data
+        "value": item.Data
       });
       $("#category").append(optionTag);
     });
@@ -359,9 +357,9 @@ var ChangeImage = function() {
 var SelectContent = function() {
   var i = $("#selectItem").prop("selectedIndex");
   if (i > 0) {
-    var d = JSON.parse(App.itemList[i - 1].data);
+    var d = JSON.parse(App.itemList[i - 1].Data);
     App.oldCategory = d.categoryids;
-    $('#formContent input[name="id"]').val(App.itemList[i - 1].id);
+    $('#formContent input[name="id"]').val(App.itemList[i - 1].Id);
     $('#formContent input[name="title"]').val(d.title);
     $('#formContent input[name="description"]').val(d.description);
     $('#formContent input[name="image"]').val(d.image);
@@ -377,16 +375,16 @@ var SelectContent = function() {
   }
 };
 var GetCategoryName = function(categoryId) {
-  var category = App.categoryList.find(v => v.id == categoryId);
-  if (!!category && category.data.length > 0) {
-    return category.data;
+  var category = App.categoryList.find(v => v.Id == categoryId);
+  if (!!category && category.Data.length > 0) {
+    return category.Data;
   }
   return "";
 };
 var GetCategoryId = function(categoryName) {
-  var category = App.categoryList.find(v => v.id == categoryId);
-  if (!!category && category.data.length > 0) {
-    return category.data;
+  var category = App.categoryList.find(v => v.Id == categoryId);
+  if (!!category && category.Data.length > 0) {
+    return category.Data;
   }
   return "";
 };

@@ -290,7 +290,7 @@ func putSitemapDataList(ctx context.Context, data []SitemapData) error {
 }
 
 func GetDynamoDataList(ctx context.Context, dataType int)([]DynamoData, error) {
-	var dynamoDataList []DynamoData
+	dynamoDataList := []DynamoData{}
 	cond1 := expression.Name("item_type").Equal(expression.Value(dataType))
 	cond2 := expression.Name("status").Equal(expression.Value(0))
 	result, err := scan(ctx, cond1.And(cond2))
