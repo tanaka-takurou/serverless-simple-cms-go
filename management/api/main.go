@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"embed"
 	"context"
 	"strconv"
 	"net/http"
@@ -35,6 +36,11 @@ type ErrorResponse struct {
 }
 
 type Response events.APIGatewayProxyResponse
+
+//go:embed data
+var dataFS embed.FS
+
+const FilePath string = "data/data.json"
 
 func HandleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (Response, error) {
 	controller.InitConfig(ctx)
@@ -120,8 +126,11 @@ func HandleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 		case "set_sample" :
 			_, err = getUser(ctx, d)
 			if err == nil {
-				err = controller.SetSampleData(ctx)
-				jsonBytes, _ = json.Marshal(UserResponse{Name: "", Token: "", ImgUrl: ""})
+				content, err := JsonDataLoad()
+				if err == nil {
+					err = controller.SetSampleData(ctx, content)
+					jsonBytes, _ = json.Marshal(UserResponse{Name: "", Token: "", ImgUrl: ""})
+				}
 			}
 		case "get_item_category_list" :
 			_, err = getUser(ctx, d)
@@ -253,6 +262,16 @@ func checkParameters(d map[string]string, targets []string) error {
 		}
 	}
 	return nil
+}
+
+func JsonDataLoad()(controller.ContentData, error) {
+	content := new(controller.ContentData)
+	jsonString, err := dataFS.ReadFile(FilePath)
+	if err != nil {
+		return *content, err
+	}
+	json.Unmarshal(jsonString, content)
+	return *content, nil
 }
 
 func main() {

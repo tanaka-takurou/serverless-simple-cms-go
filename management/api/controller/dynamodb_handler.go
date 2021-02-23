@@ -101,18 +101,13 @@ func SetConst(ctx context.Context, title string, headImage string, jsFileName st
 	return nil
 }
 
-func SetSampleData(ctx context.Context) error {
+func SetSampleData(ctx context.Context, content ContentData) error {
 	dataCount, err := GetDynamoDataCount(ctx, DataTypeItem)
 	if err != nil {
 		log.Println(err)
 		return err
 	} else if dataCount > 0 {
 		return fmt.Errorf("Error: %s", "Data is already set.")
-	}
-	content, err := JsonDataLoad()
-	if err != nil {
-		log.Println(err)
-		return err
 	}
 	err = putItemListData(ctx, content.ItemList)
 	if err != nil {

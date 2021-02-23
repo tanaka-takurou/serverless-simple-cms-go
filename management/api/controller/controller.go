@@ -4,8 +4,6 @@ import (
 	"os"
 	"log"
 	"context"
-	"io/ioutil"
-	"encoding/json"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 )
@@ -61,18 +59,7 @@ const (
 	DataTypeItemCategory int    = 3
 	DataTypeSitemap      int    = 4
 	Layout               string = "2006-01-02 15:04:05"
-	FilePath             string = "sample_data/data.json"
 )
-
-func JsonDataLoad()(ContentData, error) {
-	content := new(ContentData)
-	jsonString, err := ioutil.ReadFile(FilePath)
-	if err != nil {
-		return *content, err
-	}
-	json.Unmarshal(jsonString, content)
-	return *content, nil
-}
 
 func FixJS(ctx context.Context, filedata string) error {
 	return UploadFile(ctx, filedata, "text/javascript")

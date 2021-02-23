@@ -7,6 +7,7 @@ import (
 	"math"
 	"sort"
 	"bytes"
+	"embed"
 	"regexp"
 	"context"
 	"strconv"
@@ -77,6 +78,8 @@ type KVSData struct {
 
 type Response events.APIGatewayProxyResponse
 
+//go:embed templates
+var templateFS embed.FS
 var cfg aws.Config
 var dynamodbClient *dynamodb.Client
 
@@ -386,7 +389,7 @@ func getDefaultTemplates() *template.Template {
 		"mul": func(a, b int) int { return a * b },
 		"div": func(a, b int) int { return a / b },
 	}
-	return template.Must(template.New("").Funcs(funcMap).ParseFiles(
+	return template.Must(template.New("").Funcs(funcMap).ParseFS(templateFS,
 		"templates/index.html",
 		"templates/view.html",
 		"templates/header.html",
@@ -401,7 +404,7 @@ func getSitemapTemplates() *template.Template {
 	funcMap := template.FuncMap {
 		"safehtml": func(text string) template.HTML { return template.HTML(text) },
 	}
-	return template.Must(template.New("").Funcs(funcMap).ParseFiles("templates/sitemap.xml"))
+	return template.Must(template.New("").Funcs(funcMap).ParseFS(templateFS, "templates/sitemap.xml"))
 }
 
 func getPageData(dat PageData, title string, pageNumber int, maxPage int, maxContentPerPage int) PageData {

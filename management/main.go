@@ -5,6 +5,7 @@ import (
 	"os"
 	"log"
 	"bytes"
+	"embed"
 	"context"
 	"net/http"
 	"html/template"
@@ -19,6 +20,9 @@ type PageData struct {
 }
 
 type Response events.APIGatewayProxyResponse
+
+//go:embed templates
+var templateFS embed.FS
 
 const title string = "CMS Management Page"
 
@@ -85,21 +89,21 @@ func getTemplate(file string, baseType int) *template.Template {
 		"div": func(a, b int) int { return a / b },
 	}
 	if baseType == 0 {
-		templates = template.Must(template.New("templates").Funcs(funcMap).ParseFiles(
+		templates = template.Must(template.New("templates").Funcs(funcMap).ParseFS(templateFS,
 			"templates/view.html",
 			"templates/index.html",
 			"templates/header.html",
 			file,
 		))
 	} else if baseType == 1 {
-		templates = template.Must(template.New("templates").Funcs(funcMap).ParseFiles(
+		templates = template.Must(template.New("templates").Funcs(funcMap).ParseFS(templateFS,
 			"templates/view.html",
 			"templates/login/index.html",
 			"templates/login/header.html",
 			file,
 		))
 	} else {
-		templates = template.Must(template.New("templates").Funcs(funcMap).ParseFiles(
+		templates = template.Must(template.New("templates").Funcs(funcMap).ParseFS(templateFS,
 			"templates/view.html",
 			"templates/login/index.html",
 			"templates/login/header.html",

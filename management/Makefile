@@ -8,5 +8,4 @@ clean:
 build:
 	mkdir -p bin
 	scripts/create_template.sh
-	cp -r templates bin/templates
 	GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o bin/main
