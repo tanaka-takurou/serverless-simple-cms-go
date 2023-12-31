@@ -1,19 +1,20 @@
 package controller
 
 import (
-	"os"
-	"log"
-	"time"
 	"bytes"
-	"errors"
-	"strings"
 	"context"
-	"path/filepath"
 	"encoding/base64"
+	"errors"
+	"log"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
-	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 )
 
 type S3ContentData struct {
@@ -31,7 +32,7 @@ const (
 	StaticFilePath string = "static"
 )
 
-func UploadImage(ctx context.Context, filename string, filedata string)(string, error) {
+func UploadImage(ctx context.Context, filename string, filedata string) (string, error) {
 	t := time.Now()
 	b64data := filedata[strings.IndexByte(filedata, ',')+1:]
 	data, err := base64.StdEncoding.DecodeString(b64data)
@@ -54,13 +55,13 @@ func UploadImage(ctx context.Context, filename string, filedata string)(string, 
 	default:
 		return "", errors.New("this extension is invalid")
 	}
-	filename_ := string([]rune(filename)[:(len(filename) - len(extension))]) + t.Format(Layout2) + extension
+	filename_ := string([]rune(filename)[:(len(filename)-len(extension))]) + t.Format(Layout2) + extension
 	uploader := manager.NewUploader(s3.NewFromConfig(cfg))
 	_, err = uploader.Upload(ctx, &s3.PutObjectInput{
-		ACL: types.ObjectCannedACLPublicRead,
-		Bucket: aws.String(os.Getenv("BUCKET_NAME")),
-		Key: aws.String(ImgFilePath + "/" + filename_),
-		Body: bytes.NewReader(data),
+		ACL:         types.ObjectCannedACLPublicRead,
+		Bucket:      aws.String(os.Getenv("BUCKET_NAME")),
+		Key:         aws.String(ImgFilePath + "/" + filename_),
+		Body:        bytes.NewReader(data),
 		ContentType: aws.String(contentType),
 	})
 	if err != nil {
@@ -77,19 +78,19 @@ func UploadFile(ctx context.Context, filedata string, contentType string) error 
 	switch contentType {
 	case "text/css":
 		filename = t.Format(Layout2) + ".css"
-		SetCssFileName(ctx,"https://" + os.Getenv("BUCKET_NAME") + ".s3-" + os.Getenv("REGION") + ".amazonaws.com/" +  StaticFilePath + "/" + filename)
+		SetCssFileName(ctx, "https://"+os.Getenv("BUCKET_NAME")+".s3-"+os.Getenv("REGION")+".amazonaws.com/"+StaticFilePath+"/"+filename)
 	case "text/javascript":
 		filename = t.Format(Layout2) + ".js"
-		SetJsFileName(ctx, "https://" + os.Getenv("BUCKET_NAME") + ".s3-" + os.Getenv("REGION") + ".amazonaws.com/" + StaticFilePath + "/" + filename)
+		SetJsFileName(ctx, "https://"+os.Getenv("BUCKET_NAME")+".s3-"+os.Getenv("REGION")+".amazonaws.com/"+StaticFilePath+"/"+filename)
 	default:
 		filename = t.Format(Layout2) + ".txt"
 	}
 	uploader := manager.NewUploader(s3.NewFromConfig(cfg))
 	_, err := uploader.Upload(ctx, &s3.PutObjectInput{
-		ACL: types.ObjectCannedACLPublicRead,
-		Bucket: aws.String(os.Getenv("BUCKET_NAME")),
-		Key: aws.String(StaticFilePath + "/" + filename),
-		Body: bytes.NewReader([]byte(filedata)),
+		ACL:         types.ObjectCannedACLPublicRead,
+		Bucket:      aws.String(os.Getenv("BUCKET_NAME")),
+		Key:         aws.String(StaticFilePath + "/" + filename),
+		Body:        bytes.NewReader([]byte(filedata)),
 		ContentType: aws.String(contentType),
 	})
 	if err != nil {
@@ -99,7 +100,7 @@ func UploadFile(ctx context.Context, filedata string, contentType string) error 
 	return nil
 }
 
-func GetS3Data(ctx context.Context)(string, interface{}, error) {
+func GetS3Data(ctx context.Context) (string, interface{}, error) {
 	if s3Client == nil {
 		s3Client = s3.NewFromConfig(cfg)
 	}
@@ -112,9 +113,12 @@ func GetS3Data(ctx context.Context)(string, interface{}, error) {
 	}
 	var s3Contents []S3ContentData
 	for _, v := range res.Contents {
+		if v.Size == nil {
+			continue
+		}
 		s3Contents = append(s3Contents, S3ContentData{
-			Key: aws.ToString(v.Key),
-			Size: int(v.Size),
+			Key:          aws.ToString(v.Key),
+			Size:         int(*v.Size),
 			LastModified: aws.ToTime(v.LastModified).Format(Layout3),
 		})
 	}

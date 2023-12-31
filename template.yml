@@ -57,10 +57,12 @@ Resources:
   FrontPageFunction:
     Type: AWS::Serverless::Function
     Properties:
+      Architectures:
+      - arm64
       CodeUri: bin/
-      Handler: main
+      Handler: bootstrap
       MemorySize: 256
-      Runtime: go1.x
+      Runtime: provided.al2
       Description: 'CMS Front Function'
       Policies:
       - DynamoDBCrudPolicy:
@@ -117,10 +119,12 @@ Resources:
   ManagementPageFunction:
     Type: AWS::Serverless::Function
     Properties:
+      Architectures:
+      - arm64
       CodeUri: management/bin/
-      Handler: main
+      Handler: bootstrap
       MemorySize: 256
-      Runtime: go1.x
+      Runtime: provided.al2
       Description: 'CMS Management Front Function'
       Policies:
       - DynamoDBCrudPolicy:
@@ -148,10 +152,12 @@ Resources:
   ManagementMainFunction:
     Type: AWS::Serverless::Function
     Properties:
+      Architectures:
+      - arm64
       CodeUri: management/api/bin/
-      Handler: main
+      Handler: bootstrap
       MemorySize: 256
-      Runtime: go1.x
+      Runtime: provided.al2
       Description: 'CMS Management API Function'
       Policies:
       - DynamoDBCrudPolicy:
